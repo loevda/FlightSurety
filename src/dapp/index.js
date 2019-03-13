@@ -1,4 +1,3 @@
-
 import DOM from './dom';
 import Contract from './contract';
 import './flightsurety.css';
@@ -13,6 +12,9 @@ import './flightsurety.css';
         // Read transaction
         contract.isOperational((error, result) => {
             console.log(error,result);
+            let appStatus = DOM.elid("appStatus");
+            appStatus.appendChild(DOM.span({}, error ? String(error) : String(result)));
+
             display('Operational Status', 'Check if contract is operational', [ { label: 'Operational Status', error: error, value: result} ]);
         });
     
@@ -44,7 +46,6 @@ function display(title, description, results) {
         section.appendChild(row);
     })
     displayDiv.append(section);
-
 }
 
 
