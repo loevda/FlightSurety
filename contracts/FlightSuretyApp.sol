@@ -34,6 +34,7 @@ contract FlightSuretyApp {
     }
     mapping(bytes32 => Flight) private flights;
 
+
  
     /********************************************************************************************/
     /*                                       FUNCTION MODIFIERS                                 */
