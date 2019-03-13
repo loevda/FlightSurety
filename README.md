@@ -40,6 +40,12 @@ To build dapp for prod:
 Deploy the contents of the ./dapp folder
 
 
+## Credits
+
+##### Image: 
+* https://pixabay.com/photos/airport-airplane-aircraft-fly-3511342/
+
+
 ## Resources
 
 * [How does Ethereum work anyway?](https://medium.com/@preethikasireddy/how-does-ethereum-work-anyway-22d1df506369)
