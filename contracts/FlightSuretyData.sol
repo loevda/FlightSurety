@@ -31,10 +31,13 @@ contract FlightSuretyData {
     }
     mapping(bytes32 => Flight) private flights;
 
+    uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
+
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
     /********************************************************************************************/
 
+    event airlineFunded(address _airline);
 
     /**
     * @dev Constructor
@@ -81,9 +84,51 @@ contract FlightSuretyData {
         _;
     }
 
+    //check if airline is registered
+    modifier requireIsAirlineRegistered(address _airline)
+    {
+        require(airlines[_airline].isRegistered, "Airline is not registered");
+        _;
+    }
+
+    //check if airline is funded
+    modifier requireIsAirlineFunded(address _airline)
+    {
+        require(airlines[_airline].isRegistered, "Airline is not funded");
+        _;
+    }
+
+    //check if airline is funded
+    modifier paidEnough(uint256 _value)
+    {
+        require(msg.value >= _value, "Insufficient value");
+        _;
+    }
+
+    modifier checkValue(uint256 _price) {
+        _;
+        uint amountToReturn = msg.value - _price;
+        msg.sender.transfer(amountToReturn);
+    }
+
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
+
+
+    /**
+    * @dev Get funding status of an airline
+    *
+    * @return A bool that is the airline isFunded status
+    */
+    function isAirlineFunded(address _airline)
+    public
+    view
+    returns(bool)
+    {
+        return airlines[_airline].isFunded;
+    }
+
 
     /**
     * @dev Get operating status of contract
@@ -134,11 +179,23 @@ contract FlightSuretyData {
         delete authorizedCallers[_contractAddress];
     }
 
+
+
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
     /********************************************************************************************/
 
-   /**
+    function fundAirline()
+    payable
+    external
+    requireIsAirlineRegistered(msg.sender)
+    paidEnough(AIRLINE_FUNDING_VALUE)
+    checkValue(AIRLINE_FUNDING_VALUE)
+    {
+        airlines[msg.sender].isFunded = true;
+    }
+
+    /**
     * @dev Add an airline to the registration queue
     *      Can only be called from FlightSuretyApp contract
     *
@@ -190,6 +247,7 @@ contract FlightSuretyData {
     public
     payable
     {
+
     }
 
     function getFlightKey

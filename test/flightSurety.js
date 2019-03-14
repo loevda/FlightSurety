@@ -1,6 +1,6 @@
-
 var Test = require('../config/testConfig.js');
 var BigNumber = require('bignumber.js');
+var web3 = require('web3');
 
 contract('Flight Surety Tests', async (accounts) => {
     var config;
@@ -71,12 +71,29 @@ contract('Flight Surety Tests', async (accounts) => {
 
   });
 
+    it('lets an Airline deposit fund', async () => {
+
+        // ACT FUNDING
+        try {
+            await config.flightSuretyData.fundAirline({from: config.firstAirline, value: config.weiMultiple*12});
+        }
+        catch(e) {
+            console.log(e);
+        }
+        let result = await config.flightSuretyData.isAirlineFunded(config.firstAirline);
+
+        // ASSERT
+        assert.equal(result, true, "Airline hasn't yet provided funding");
+
+    });
+
+
   it('(airline) cannot register an Airline using registerAirline() if it is not funded', async () => {
     
     // ARRANGE
     let newAirline = accounts[2];
 
-    // ACT
+      // ACT
     try {
         await config.flightSuretyApp.registerAirline(newAirline, {from: config.firstAirline});
     }
