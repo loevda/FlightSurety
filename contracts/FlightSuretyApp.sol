@@ -16,7 +16,8 @@ contract FlightSuretyApp {
     /*                                       DATA VARIABLES                                     */
     /********************************************************************************************/
 
-
+    // funding cost
+    uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
 
     // Flight status codees
     uint8 private constant STATUS_CODE_UNKNOWN = 0;
@@ -69,6 +70,25 @@ contract FlightSuretyApp {
         _;
     }
 
+    modifier requireIsAirlineFunded(address _airline)
+    {
+        require(flightSuretyData.isAirlineFunded(_airline), "Airline is not funded");
+        _;
+    }
+
+    modifier requireIsAirlineRegistered(address _airline)
+    {
+        require(flightSuretyData.isAirlineRegistered(_airline), "Airline is not registered");
+        _;
+    }
+
+    //check if airline is funded
+    modifier paidEnough(uint256 _value)
+    {
+        require(msg.value >= _value, "Insufficient value");
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       CONSTRUCTOR                                        */
     /********************************************************************************************/
@@ -77,12 +97,11 @@ contract FlightSuretyApp {
     * @dev Contract constructor
     *
     */
-    constructor
-                                (
-                                ) 
-                                public 
+    constructor ( address dataContract )
+    public
     {
         contractOwner = msg.sender;
+        flightSuretyData = FlightSuretyData(dataContract);
     }
 
     /********************************************************************************************/
@@ -122,23 +141,24 @@ contract FlightSuretyApp {
     */
     function fundAirline()
     external
-    pure
-    returns(bool success, uint256 votes)
+    payable
+    requireIsAirlineRegistered(msg.sender)
+    paidEnough(msg.value)
     {
-        return (success, 0);
+        address(uint160(address(flightSuretyData))).transfer(msg.value);
+        return flightSuretyData.fundAirline(msg.sender);
     }
   
    /**
     * @dev Add an airline to the registration queue
     *
     */   
-    function registerAirline
-                            (   
-                            )
-                            external
-                            pure
-                            returns(bool success, uint256 votes)
+    function registerAirline(address _airline)
+    external
+    requireIsAirlineFunded(msg.sender)
+    returns(bool success, uint256 votes)
     {
+        flightSuretyData.registerAirline(_airline, msg.sender);
         return (success, 0);
     }
 
@@ -369,6 +389,9 @@ contract FlightSuretyApp {
 }
 
 contract FlightSuretyData {
-    function registerAirline () external;
+    function isAirlineFunded(address _airline) external view returns(bool);
+    function isAirlineRegistered(address _airline) external view returns(bool);
+    function registerAirline (address _newAirline, address _registeringAirline) external;
+    function fundAirline(address _airline) payable external;
 }
 

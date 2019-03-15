@@ -75,10 +75,10 @@ contract('Flight Surety Tests', async (accounts) => {
 
         // ACT FUNDING
         try {
-            await config.flightSuretyData.fundAirline({from: config.firstAirline, value: config.weiMultiple*12});
+            await config.flightSuretyApp.fundAirline({from: config.firstAirline, value: config.weiMultiple*12});
         }
         catch(e) {
-            console.log(e);
+            console.log(e.toString());
         }
         let result = await config.flightSuretyData.isAirlineFunded(config.firstAirline);
 
@@ -88,7 +88,7 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-  it('(airline) cannot register an Airline using registerAirline() if it is not funded', async () => {
+  it('(airline) can register an Airline using registerAirline() if it is funded', async () => {
     
     // ARRANGE
     let newAirline = accounts[2];
@@ -98,14 +98,35 @@ contract('Flight Surety Tests', async (accounts) => {
         await config.flightSuretyApp.registerAirline(newAirline, {from: config.firstAirline});
     }
     catch(e) {
-
+        console.log(e.toString());
     }
-    let result = await config.flightSuretyData.isAirline.call(newAirline); 
+    let result = await config.flightSuretyData.isAirlineRegistered(newAirline);
 
     // ASSERT
-    assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
+    assert.equal(result, true, "Airline should not be able to register another airline if it hasn't provided funding");
 
   });
+
+
+    it('(airline) cannot register an Airline using registerAirline() if it is not funded', async () => {
+
+        // ARRANGE
+        let callingAirline = accounts[2]
+        let newAirline = accounts[3];
+
+        // ACT
+        try {
+            await config.flightSuretyApp.registerAirline(newAirline, {from: callingAirline});
+        }
+        catch(e) {
+            console.log(e.toString());
+        }
+        let result = await config.flightSuretyData.isAirlineRegistered(newAirline);
+
+        // ASSERT
+        assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
+
+    });
  
 
 });

@@ -20,7 +20,7 @@ contract FlightSuretyData {
     }
 
     mapping(address => Airline) public airlines;
-    uint private numRegisteredAirlines;
+    uint private numFundedAirlines; // num of voters
 
     struct Flight {
         bool isRegistered;
@@ -33,11 +33,15 @@ contract FlightSuretyData {
 
     uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
 
+
+
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
     /********************************************************************************************/
 
+    event airlineRegistered(address _airline);
     event airlineFunded(address _airline);
+
 
     /**
     * @dev Constructor
@@ -45,10 +49,11 @@ contract FlightSuretyData {
     */
     constructor (address _airline)
     public
+    payable
     {
         contractOwner = msg.sender;
         airlines[_airline] = Airline(true, false);
-        numRegisteredAirlines = 1;
+        numFundedAirlines = 1;
     }
 
     /********************************************************************************************/
@@ -98,12 +103,7 @@ contract FlightSuretyData {
         _;
     }
 
-    //check if airline is funded
-    modifier paidEnough(uint256 _value)
-    {
-        require(msg.value >= _value, "Insufficient value");
-        _;
-    }
+
 
     modifier checkValue(uint256 _price) {
         _;
@@ -127,6 +127,19 @@ contract FlightSuretyData {
     returns(bool)
     {
         return airlines[_airline].isFunded;
+    }
+
+    /**
+   * @dev Get registered status of an airline
+   *
+   * @return A bool that is the airline isRegistered status
+   */
+    function isAirlineRegistered(address _airline)
+    public
+    view
+    returns(bool)
+    {
+        return airlines[_airline].isRegistered;
     }
 
 
@@ -185,14 +198,13 @@ contract FlightSuretyData {
     /*                                     SMART CONTRACT FUNCTIONS                             */
     /********************************************************************************************/
 
-    function fundAirline()
+    function fundAirline(address _airline)
     payable
     external
-    requireIsAirlineRegistered(msg.sender)
-    paidEnough(AIRLINE_FUNDING_VALUE)
-    checkValue(AIRLINE_FUNDING_VALUE)
+    requireIsOperational
+    requireIsCallerAuthorized
     {
-        airlines[msg.sender].isFunded = true;
+        airlines[_airline].isFunded = true;
     }
 
     /**
@@ -200,10 +212,13 @@ contract FlightSuretyData {
     *      Can only be called from FlightSuretyApp contract
     *
     */   
-    function registerAirline ()
+    function registerAirline (address _newAirline, address _registeringAirline)
     external
     requireIsCallerAuthorized
+    requireIsAirlineFunded(_registeringAirline)
     {
+        airlines[_newAirline] = Airline(true, false);
+        emit airlineRegistered(_newAirline);
     }
 
 
