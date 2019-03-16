@@ -31,9 +31,6 @@ contract FlightSuretyData {
     }
     mapping(bytes32 => Flight) private flights;
 
-    uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
-
-
 
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
@@ -115,6 +112,13 @@ contract FlightSuretyData {
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
 
+    function getNumAirlineFunded()
+    public
+    view
+    returns (uint)
+    {
+        return numFundedAirlines;
+    }
 
     /**
     * @dev Get funding status of an airline

@@ -18,8 +18,12 @@ contract FlightSuretyApp {
 
     // funding cost
     uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
+    // Multiparty num
+    uint8 private constant MULTIPARTY_MIN_NUM_AIRLINES = 4;
+    // voting
+    mapping(address => address[]) private airlineMulitipartyCalls;
 
-    // Flight status codees
+    // Flight status codes
     uint8 private constant STATUS_CODE_UNKNOWN = 0;
     uint8 private constant STATUS_CODE_ON_TIME = 10;
     uint8 private constant STATUS_CODE_LATE_AIRLINE = 20;
@@ -86,6 +90,12 @@ contract FlightSuretyApp {
         _;
     }
 
+    modifier requireAirlineNotYetRegistered(address _airline)
+    {
+        require(!flightSuretyData.isAirlineRegistered(_airline), "Airline has already been registered");
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       CONSTRUCTOR                                        */
     /********************************************************************************************/
@@ -132,6 +142,14 @@ contract FlightSuretyApp {
         address(uint160(address(flightSuretyData))).transfer(msg.value);
         return flightSuretyData.fundAirline(msg.sender);
     }
+
+    function getNumAirlineFunded()
+    public
+    view
+    returns (uint)
+    {
+        return flightSuretyData.getNumAirlineFunded();
+    }
   
    /**
     * @dev Add an airline to the registration queue
@@ -140,10 +158,32 @@ contract FlightSuretyApp {
     function registerAirline(address _airline)
     external
     requireIsAirlineFunded(msg.sender)
+    requireAirlineNotYetRegistered(_airline)
     returns(bool success, uint256 votes)
     {
-        flightSuretyData.registerAirline(_airline, msg.sender);
-        return (success, 0);
+        if (getNumAirlineFunded() <= MULTIPARTY_MIN_NUM_AIRLINES) {
+            flightSuretyData.registerAirline(_airline, msg.sender);
+            airlineMulitipartyCalls[_airline] = [msg.sender];
+            return (success, airlineMulitipartyCalls[_airline].length);
+        } else {
+            // check if sender has already voted?
+            bool isDuplicate = false;
+            for(uint c=0; c<airlineMulitipartyCalls[_airline].length; c++) {
+                if (airlineMulitipartyCalls[_airline][c] == msg.sender) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            require(!isDuplicate,
+                "Voting airline has already submitted vote for this new ailine.");
+
+            airlineMulitipartyCalls[_airline].push(msg.sender);
+            if (airlineMulitipartyCalls[_airline].length >= MULTIPARTY_MIN_NUM_AIRLINES) {
+                flightSuretyData.registerAirline(_airline, msg.sender);
+                return (success, airlineMulitipartyCalls[_airline].length);
+            }
+            return (false, airlineMulitipartyCalls[_airline].length);
+        }
     }
 
 
@@ -378,5 +418,6 @@ contract FlightSuretyData {
     function isAirlineRegistered(address _airline) external view returns(bool);
     function registerAirline (address _newAirline, address _registeringAirline) external;
     function fundAirline(address _airline) payable external;
+    function getNumAirlineFunded() public view returns (uint8);
 }
 

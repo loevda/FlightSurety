@@ -71,7 +71,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
   });
 
-    it('(airline) can deposit fund', async () => {
+    it('(registered airline) can deposit fund', async () => {
 
         // ACT FUNDING
         try {
@@ -88,7 +88,7 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-  it('(airline) can register an Airline using registerAirline() if it is funded', async () => {
+  it('(funded airline) can register an Airline using registerAirline() if number of funded airlines is below treshold', async () => {
     
     // ARRANGE
     let newAirline = accounts[2];
@@ -108,7 +108,27 @@ contract('Flight Surety Tests', async (accounts) => {
   });
 
 
-    it('(airline) cannot register an Airline using registerAirline() if it is not funded', async () => {
+    it('(airline) cannot register another airline that is already registered', async () => {
+
+        // ARRANGE
+        let newAirline = accounts[2];
+        let result = undefined;
+
+        // ACT
+        try {
+            result = await config.flightSuretyApp.registerAirline(newAirline);
+        }
+        catch(e) {
+            //should revert here
+            result = false;
+        }
+
+        // ASSERT
+        assert.equal(result, false, "Airline should not be able to register an already registered airline");
+    });
+
+
+    it('(airline) cannot register another airline using registerAirline() if it is not funded', async () => {
 
         // ARRANGE
         let callingAirline = accounts[2]
@@ -127,6 +147,9 @@ contract('Flight Surety Tests', async (accounts) => {
         assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
 
     });
+
+
+
  
 
 });
