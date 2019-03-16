@@ -171,23 +171,36 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-    it('(airline) cannot register another airline using registerAirline() if it is not funded', async () => {
+    it('(airline) can be register using the multiparty consensus', async () => {
 
         // ARRANGE
-        let callingAirline = accounts[2]
-        let newAirline = accounts[8];
+        let airline2 = accounts[2];
+        let airline3 = accounts[3];
+        let airline4 = accounts[4];
+        let airline5 = accounts[5];
 
-        // ACT
+        // ACT -- let airline fund themselves
         try {
-            await config.flightSuretyApp.registerAirline(newAirline, {from: callingAirline});
+            await config.flightSuretyApp.fundAirline({from: airline2, value: config.weiMultiple*12});
+            await config.flightSuretyApp.fundAirline({from: airline3, value: config.weiMultiple*12});
+            await config.flightSuretyApp.fundAirline({from: airline4, value: config.weiMultiple*12});
         }
         catch(e) {
             //console.log(e.toString());
         }
-        let result = await config.flightSuretyData.isAirlineRegistered(newAirline);
+
+        try {
+            await config.flightSuretyApp.registerAirline(airline5, {from: airline2});
+            await config.flightSuretyApp.registerAirline(airline5, {from: airline3});
+        }
+        catch(e) {
+
+        }
+
+        let result = await config.flightSuretyData.isAirlineRegistered(airline5);
 
         // ASSERT
-        assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
+        assert.equal(result, true, "Fifth airline should cannot be registered using multiparty consensus.");
 
     });
 

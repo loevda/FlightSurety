@@ -20,8 +20,8 @@ contract FlightSuretyData {
     }
 
     mapping(address => Airline) public airlines;
-    uint private numFundedAirlines; // num of voters
-    uint private numRegisteredAirlines; // num of voters
+    uint256 private numFundedAirlines; // num of voters
+    uint256 private numRegisteredAirlines; // num of voters
 
     struct Flight {
         bool isRegistered;
@@ -117,7 +117,7 @@ contract FlightSuretyData {
     function getNumRegisteredAirlines()
     public
     view
-    returns (uint)
+    returns (uint256)
     {
         return numRegisteredAirlines;
     }
@@ -126,7 +126,7 @@ contract FlightSuretyData {
     function getNumAirlineFunded()
     public
     view
-    returns (uint)
+    returns (uint256)
     {
         return numFundedAirlines;
     }

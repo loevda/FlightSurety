@@ -19,7 +19,8 @@ contract FlightSuretyApp {
     // funding cost
     uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
     // Multiparty num
-    uint8 private constant MULTIPARTY_MIN_NUM_AIRLINES = 4;
+    uint256 private constant MULTIPARTY_MIN_NUM_AIRLINES = 4;
+    uint256 private constant MULTIPARTY_CONSENSUS_DIVIDER = 2; //50%
     // voting
     mapping(address => address[]) private airlineMulitipartyCalls;
 
@@ -146,7 +147,7 @@ contract FlightSuretyApp {
     function getNumAirlineFunded()
     public
     view
-    returns (uint)
+    returns (uint256)
     {
         return flightSuretyData.getNumAirlineFunded();
     }
@@ -154,7 +155,7 @@ contract FlightSuretyApp {
     function getNumRegisteredAirlines()
     public
     view
-    returns (uint)
+    returns (uint256)
     {
         return flightSuretyData.getNumRegisteredAirlines();
     }
@@ -186,7 +187,7 @@ contract FlightSuretyApp {
                 "Voting airline has already submitted vote for this new ailine.");
 
             airlineMulitipartyCalls[_airline].push(msg.sender);
-            if (airlineMulitipartyCalls[_airline].length >= MULTIPARTY_MIN_NUM_AIRLINES) {
+            if (airlineMulitipartyCalls[_airline].length >= getNumRegisteredAirlines().div(MULTIPARTY_CONSENSUS_DIVIDER)) {
                 flightSuretyData.registerAirline(_airline, msg.sender);
                 return (success, airlineMulitipartyCalls[_airline].length);
             }
@@ -426,7 +427,7 @@ contract FlightSuretyData {
     function isAirlineRegistered(address _airline) external view returns(bool);
     function registerAirline (address _newAirline, address _registeringAirline) external;
     function fundAirline(address _airline) payable external;
-    function getNumAirlineFunded() public view returns (uint8);
-    function getNumRegisteredAirlines() public view returns (uint);
+    function getNumAirlineFunded() public view returns (uint256);
+    function getNumRegisteredAirlines() public view returns (uint256);
 }
 
