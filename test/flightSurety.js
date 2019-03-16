@@ -71,7 +71,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
   });
 
-    it('lets an Airline deposit fund', async () => {
+    it('(airline) can deposit fund', async () => {
 
         // ACT FUNDING
         try {
@@ -119,7 +119,7 @@ contract('Flight Surety Tests', async (accounts) => {
             await config.flightSuretyApp.registerAirline(newAirline, {from: callingAirline});
         }
         catch(e) {
-            console.log(e.toString());
+            //console.log(e.toString());
         }
         let result = await config.flightSuretyData.isAirlineRegistered(newAirline);
 

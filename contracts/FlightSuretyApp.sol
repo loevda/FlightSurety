@@ -38,9 +38,6 @@ contract FlightSuretyApp {
     }
     mapping(bytes32 => Flight) private flights;
 
-    bool private operational = true; // Blocks all state changes throughout the contract if false
-
-
  
     /********************************************************************************************/
     /*                                       FUNCTION MODIFIERS                                 */
@@ -57,7 +54,7 @@ contract FlightSuretyApp {
     modifier requireIsOperational() 
     {
          // Modify to call data contract's status
-        require(operational, "Contract is currently not operational");
+        require(isOperational(), "Contract is currently not operational");
         _;  // All modifiers require an "_" which indicates where the function body will be added
     }
 
@@ -113,23 +110,10 @@ contract FlightSuretyApp {
     view
     returns(bool)
     {
-        return operational;  // Modify to call data contract's status
+        return flightSuretyData.isOperational();  // Modify to call data contract's status
     }
 
-    /**
-    * @dev Sets contract operations on/off
-    *
-    * When operational mode is disabled, all write transactions except for this one will fail
-    */
-    function setOperatingStatus
-    (
-        bool mode
-    )
-    external
-    requireContractOwner
-    {
-        operational = mode;
-    }
+
 
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
@@ -389,6 +373,7 @@ contract FlightSuretyApp {
 }
 
 contract FlightSuretyData {
+    function isOperational() public view returns(bool);
     function isAirlineFunded(address _airline) external view returns(bool);
     function isAirlineRegistered(address _airline) external view returns(bool);
     function registerAirline (address _newAirline, address _registeringAirline) external;
