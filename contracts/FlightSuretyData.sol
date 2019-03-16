@@ -21,6 +21,7 @@ contract FlightSuretyData {
 
     mapping(address => Airline) public airlines;
     uint private numFundedAirlines; // num of voters
+    uint private numRegisteredAirlines; // num of voters
 
     struct Flight {
         bool isRegistered;
@@ -50,7 +51,8 @@ contract FlightSuretyData {
     {
         contractOwner = msg.sender;
         airlines[_airline] = Airline(true, false);
-        numFundedAirlines = 1;
+        numRegisteredAirlines = 1;
+        numFundedAirlines = 0;
     }
 
     /********************************************************************************************/
@@ -111,6 +113,15 @@ contract FlightSuretyData {
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
+
+    function getNumRegisteredAirlines()
+    public
+    view
+    returns (uint)
+    {
+        return numRegisteredAirlines;
+    }
+
 
     function getNumAirlineFunded()
     public
@@ -209,6 +220,7 @@ contract FlightSuretyData {
     requireIsCallerAuthorized
     {
         airlines[_airline].isFunded = true;
+        numFundedAirlines = numFundedAirlines + 1;
     }
 
     /**
@@ -222,6 +234,7 @@ contract FlightSuretyData {
     requireIsAirlineFunded(_registeringAirline)
     {
         airlines[_newAirline] = Airline(true, false);
+        numRegisteredAirlines = numRegisteredAirlines + 1;
         emit airlineRegistered(_newAirline);
     }
 

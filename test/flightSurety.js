@@ -108,6 +108,50 @@ contract('Flight Surety Tests', async (accounts) => {
   });
 
 
+
+  //check if up to 4 airlines can registered before treshold kicks in
+
+    it('(4 airlines) can be registered before theshold kicks in', async () => {
+        // ARRANGE
+        let airline3 = accounts[3];
+        let airline4 = accounts[4];
+        let airline5 = accounts[5];
+        let result = undefined;
+
+        // ACT
+        try {
+            await config.flightSuretyApp.registerAirline(airline3, {from: config.firstAirline});
+        }
+        catch(e) {
+        }
+        let result3 = await config.flightSuretyData.isAirlineRegistered(airline3);
+        // ASSERT
+        assert.equal(result3, true, "Third airline should be able to be registered");
+
+        // ACT
+        try {
+            await config.flightSuretyApp.registerAirline(airline4, {from: config.firstAirline});
+        }
+        catch(e) {
+        }
+        let result4 = await config.flightSuretyData.isAirlineRegistered(airline4);
+        // ASSERT
+        assert.equal(result4, true, "Fourth airline should be able to be registered");
+
+        // ACT
+
+        try {
+            await config.flightSuretyApp.registerAirline(airline5, {from: config.firstAirline});
+        }
+        catch(e) {
+            // should revert
+        }
+        let result5 = await config.flightSuretyData.isAirlineRegistered(airline5);;
+        // ASSERT
+        assert.equal(result5, false, "Fifth airline should not be able to be registered without passing the treshold");
+    });
+
+
     it('(airline) cannot register another airline that is already registered', async () => {
 
         // ARRANGE
@@ -122,7 +166,6 @@ contract('Flight Surety Tests', async (accounts) => {
             //should revert here
             result = false;
         }
-
         // ASSERT
         assert.equal(result, false, "Airline should not be able to register an already registered airline");
     });
@@ -132,7 +175,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
         // ARRANGE
         let callingAirline = accounts[2]
-        let newAirline = accounts[3];
+        let newAirline = accounts[8];
 
         // ACT
         try {
@@ -147,6 +190,9 @@ contract('Flight Surety Tests', async (accounts) => {
         assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
 
     });
+
+
+
 
 
 

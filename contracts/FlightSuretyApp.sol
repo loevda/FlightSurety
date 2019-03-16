@@ -150,6 +150,14 @@ contract FlightSuretyApp {
     {
         return flightSuretyData.getNumAirlineFunded();
     }
+
+    function getNumRegisteredAirlines()
+    public
+    view
+    returns (uint)
+    {
+        return flightSuretyData.getNumRegisteredAirlines();
+    }
   
    /**
     * @dev Add an airline to the registration queue
@@ -161,12 +169,12 @@ contract FlightSuretyApp {
     requireAirlineNotYetRegistered(_airline)
     returns(bool success, uint256 votes)
     {
-        if (getNumAirlineFunded() <= MULTIPARTY_MIN_NUM_AIRLINES) {
+        if (getNumRegisteredAirlines() < MULTIPARTY_MIN_NUM_AIRLINES) {
             flightSuretyData.registerAirline(_airline, msg.sender);
             airlineMulitipartyCalls[_airline] = [msg.sender];
             return (success, airlineMulitipartyCalls[_airline].length);
         } else {
-            // check if sender has already voted?
+            // check if sender has already (voted for)/(try) to register this airline?
             bool isDuplicate = false;
             for(uint c=0; c<airlineMulitipartyCalls[_airline].length; c++) {
                 if (airlineMulitipartyCalls[_airline][c] == msg.sender) {
@@ -419,5 +427,6 @@ contract FlightSuretyData {
     function registerAirline (address _newAirline, address _registeringAirline) external;
     function fundAirline(address _airline) payable external;
     function getNumAirlineFunded() public view returns (uint8);
+    function getNumRegisteredAirlines() public view returns (uint);
 }
 
