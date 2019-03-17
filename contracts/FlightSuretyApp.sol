@@ -152,14 +152,6 @@ contract FlightSuretyApp {
         return flightSuretyData.fundAirline(msg.sender);
     }
 
-    function getNumAirlineFunded()
-    public
-    view
-    returns (uint256)
-    {
-        return flightSuretyData.getNumAirlineFunded();
-    }
-
     function getNumRegisteredAirlines()
     public
     view
@@ -422,7 +414,6 @@ contract FlightSuretyData {
     function isAirlineRegistered(address _airline) external view returns(bool);
     function registerAirline (address _newAirline, address _registeringAirline) external;
     function fundAirline(address _airline) payable external;
-    function getNumAirlineFunded() public view returns (uint256);
     function getNumRegisteredAirlines() public view returns (uint256);
 }
 

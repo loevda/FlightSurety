@@ -20,7 +20,6 @@ contract FlightSuretyData {
     }
 
     mapping(address => Airline) public airlines;
-    uint256 private numFundedAirlines; // num of voters
     uint256 private numRegisteredAirlines; // num of voters
 
     struct Flight {
@@ -31,6 +30,9 @@ contract FlightSuretyData {
         address airline;
     }
     mapping(bytes32 => Flight) private flights;
+
+
+    mapping (address => uint) pendingWithdrawals; // needed for withdrawal pattern
 
 
     /********************************************************************************************/
@@ -52,7 +54,6 @@ contract FlightSuretyData {
         contractOwner = msg.sender;
         airlines[_airline] = Airline(true, false);
         numRegisteredAirlines = 1;
-        numFundedAirlines = 0;
     }
 
     /********************************************************************************************/
@@ -122,14 +123,6 @@ contract FlightSuretyData {
         return numRegisteredAirlines;
     }
 
-
-    function getNumAirlineFunded()
-    public
-    view
-    returns (uint256)
-    {
-        return numFundedAirlines;
-    }
 
     /**
     * @dev Get funding status of an airline
@@ -220,7 +213,6 @@ contract FlightSuretyData {
     requireIsCallerAuthorized
     {
         airlines[_airline].isFunded = true;
-        numFundedAirlines = numFundedAirlines + 1;
         emit airlineFunded(_airline);
     }
 
