@@ -8,8 +8,8 @@ module.exports = {
             port: 7545,
             network_id: '*', // Match any network id
         },
-        // add develop as weel as on my local machine
-        // truffle dev network is name "develop",
+        // add develop as well as on my local machine
+        // truffle dev network is named "develop",
         // not "development"
         develop: {
             provider: function() {
