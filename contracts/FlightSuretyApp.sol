@@ -32,7 +32,7 @@ contract FlightSuretyApp {
     uint8 private constant STATUS_CODE_LATE_TECHNICAL = 40;
     uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
-    address private contractOwner;          // Account used to deploy contract
+    address private contractOwner;     // Account used to deploy contract
     FlightSuretyData flightSuretyData; // data contract
 
     struct Flight {
@@ -196,17 +196,13 @@ contract FlightSuretyApp {
     }
 
 
-   /**
-    * @dev Register a future flight for insuring.
-    *
-    */  
-    function registerFlight
-                                (
-                                )
-                                external
-                                pure
+    function registerFlight()
+    external
+    view
+    requireIsAirlineFunded(msg.sender)
+    returns (bool)
     {
-
+        return (true);
     }
     
    /**
@@ -227,13 +223,8 @@ contract FlightSuretyApp {
 
 
     // Generate a request for oracles to fetch flight information
-    function fetchFlightStatus
-                        (
-                            address airline,
-                            string calldata flight,
-                            uint256 timestamp                            
-                        )
-                        external
+    function fetchFlightStatus (address airline, string calldata flight, uint256 timestamp)
+    external
     {
         uint8 index = getRandomIndex(msg.sender);
 
@@ -293,11 +284,9 @@ contract FlightSuretyApp {
 
 
     // Register an oracle with the contract
-    function registerOracle
-                            (
-                            )
-                            external
-                            payable
+    function registerOracle()
+    external
+    payable
     {
         // Require registration fee
         require(msg.value >= REGISTRATION_FEE, "Registration fee is required");
@@ -351,9 +340,7 @@ contract FlightSuretyApp {
         // oracles respond with the *** same *** information
         emit OracleReport(airline, flight, timestamp, statusCode);
         if (oracleResponses[key].responses[statusCode].length >= MIN_RESPONSES) {
-
             emit FlightStatusInfo(airline, flight, timestamp, statusCode);
-
             // Handle flight status as appropriate
             processFlightStatus(airline, flight, timestamp, statusCode);
         }

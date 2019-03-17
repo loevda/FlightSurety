@@ -180,6 +180,7 @@ contract('Flight Surety Tests', async (accounts) => {
         let airline5 = accounts[5];
 
         // ACT -- let airline fund themselves
+        // should check also that extra value is returned to the sender
         try {
             await config.flightSuretyApp.fundAirline({from: airline2, value: config.weiMultiple*12});
             await config.flightSuretyApp.fundAirline({from: airline3, value: config.weiMultiple*12});
@@ -191,6 +192,24 @@ contract('Flight Surety Tests', async (accounts) => {
 
         try {
             await config.flightSuretyApp.registerAirline(airline5, {from: airline2});
+        }
+        catch(e) {
+
+        }
+
+        // check if airline can register twice the same airline
+        let resDuplicate = undefined;
+        try {
+            resDuplicate = await config.flightSuretyApp.registerAirline(airline5, {from: airline2});
+        }
+        catch(e) {
+            // should revert
+            resDuplicate = false;
+        }
+
+        assert.equal(resDuplicate, false, "A registered airline should not be able to register twice the same airline.");
+
+        try {
             await config.flightSuretyApp.registerAirline(airline5, {from: airline3});
         }
         catch(e) {
@@ -200,15 +219,8 @@ contract('Flight Surety Tests', async (accounts) => {
         let result = await config.flightSuretyData.isAirlineRegistered(airline5);
 
         // ASSERT
-        assert.equal(result, true, "Fifth airline should cannot be registered using multiparty consensus.");
+        assert.equal(result, true, "Fifth airline should now be registered using multiparty consensus.");
 
     });
-
-
-
-
-
-
- 
 
 });

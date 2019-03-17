@@ -221,13 +221,9 @@ contract FlightSuretyData {
     {
         airlines[_airline].isFunded = true;
         numFundedAirlines = numFundedAirlines + 1;
+        emit airlineFunded(_airline);
     }
 
-    /**
-    * @dev Add an airline to the registration queue
-    *      Can only be called from FlightSuretyApp contract
-    *
-    */   
     function registerAirline (address _newAirline, address _registeringAirline)
     external
     requireIsCallerAuthorized
