@@ -6,7 +6,8 @@ module.exports = {
         ganache: {
             host: '127.0.0.1',
             port: 7545,
-            network_id: '*', // Match any network id
+            network_id: '*', // Match any network id,
+            accounts: 50,
         },
         // add develop as well as on my local machine
         // truffle dev network is named "develop",
