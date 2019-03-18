@@ -6,10 +6,6 @@ import express from 'express';
 require("babel-core/register");
 require("babel-polyfill");
 
-/*let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
-web3.eth.defaultAccount = web3.eth.accounts[0];
-let flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);*/
-
 class FlightSuretyServer {
 
     /**
@@ -19,6 +15,7 @@ class FlightSuretyServer {
         this.app = express();
         this.initExpress();
         this.initWeb3();
+        this.registerOracles();
         this.initControllers();
         this.getInfo();
         this.start();
@@ -34,22 +31,24 @@ class FlightSuretyServer {
             this.web3 =
                 await new Web3(new Web3.providers.WebsocketProvider(
                     this.config.url.replace('http', 'ws')));
-            this.accounts = await  this.web3.eth.getAccounts();
+            this.accounts = await this.web3.eth.getAccounts();
             this.web3.eth.defaultAccount = this.accounts[0];
             this.flightSuretyData =
                 new this.web3.eth.Contract(FlightSuretyData.abi, this.config.dataAddress);
             this.flightSuretyApp =
                 new this.web3.eth.Contract(FlightSuretyApp.abi, this.config.appAddress);
-            console.log('---- AVAILABLE ACCOUNTS ----')
+            console.log('--------- AVAILABLE ACCOUNTS ---------');
             console.log(this.accounts);
-            console.log('----------------------------');
+            console.log('--------------------------------------');
         } catch(e) {
             // you might need to start ganache
             // and deploy your contracts if you get there
             console.log("\x1b[41m", "Please check that ganache is running ....");
             console.log(e);
         }
+    }
 
+    registerOracles = async () => {
 
     }
 
