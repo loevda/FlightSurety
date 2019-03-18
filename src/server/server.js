@@ -40,12 +40,16 @@ class FlightSuretyServer {
                 new this.web3.eth.Contract(FlightSuretyData.abi, this.config.dataAddress);
             this.flightSuretyApp =
                 new this.web3.eth.Contract(FlightSuretyApp.abi, this.config.appAddress);
+            console.log('---- AVAILABLE ACCOUNTS ----')
+            console.log(this.accounts);
+            console.log('----------------------------');
         } catch(e) {
             // you might need to start ganache
             // and deploy your contracts if you get there
             console.log("\x1b[41m", "Please check that ganache is running ....");
             console.log(e);
         }
+
 
     }
 
@@ -84,12 +88,7 @@ class FlightSuretyServer {
     console.log(event)
 });
 
- const app = express();
- app.get('/api', (req, res) => {
- res.send({
- message: 'An API for use with your Dapp!'
- })
- })
+
 */
 
 
