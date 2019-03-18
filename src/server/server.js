@@ -8,21 +8,16 @@ require("babel-core/register");
 require("babel-polyfill");
 
 
+// set up contract data
 
-try {
-    let config = Config['localhost'];
-    let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
-    let accounts = web3.eth.getAccounts();
-    web3.eth.defaultAccount = web3.eth.accounts[0];
-    let flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
-    let flightSuretyData = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
-    let numOracles = config.numOracles < accounts.length ? config.numOracles : (accounts.length -1);
-} catch(e) {
-    // you might need to start ganache
-    // and deploy your contracts if you get there
-    console.log("\x1b[41m", "Please check that ganache is running ....");
-    console.log(e);
-}
+const config = Config['localhost'];
+const web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
+const accounts = web3.eth.getAccounts();
+web3.eth.defaultAccount = web3.eth.accounts[0];
+const flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
+const flightSuretyData = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
+
+
 
 
 class FlightSuretyServer {
@@ -48,7 +43,7 @@ class FlightSuretyServer {
                     {
                         "/": {
                             method: "GET",
-                            description: "An API for use with your Dapp!"
+                            description: `An API for use with your Dapp`
                         }
                     }
                 ]
