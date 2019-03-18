@@ -3,6 +3,7 @@ import FlightSuretyData from '../../build/contracts/FlightSuretyData.json';
 import Config from './config.json';
 import Web3 from 'web3';
 import express from 'express';
+const bodyParser = require("body-parser");
 require("babel-core/register");
 require("babel-polyfill");
 
