@@ -13,7 +13,7 @@ To install, download or clone the repo, then:
 
 1. `npm install`
 2. `truffle compile`
-3. `truffle migrate --reset --network ganache`<br />
+3. `truffle migrate --reset --network ganache --firstAirline=FIRST_AIRLINE_ADDRESS`<br />
     __Warning__: Network Port has been updated to 7545 for Ganache AppImage
 4. npm run server
 5. npm run dapp
