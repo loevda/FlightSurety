@@ -7,6 +7,24 @@ const bodyParser = require("body-parser");
 require("babel-core/register");
 require("babel-polyfill");
 
+
+
+try {
+    let config = Config['localhost'];
+    let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
+    let accounts = web3.eth.getAccounts();
+    web3.eth.defaultAccount = web3.eth.accounts[0];
+    let flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
+    let flightSuretyData = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
+    let numOracles = config.numOracles < accounts.length ? config.numOracles : (accounts.length -1);
+} catch(e) {
+    // you might need to start ganache
+    // and deploy your contracts if you get there
+    console.log("\x1b[41m", "Please check that ganache is running ....");
+    console.log(e);
+}
+
+
 class FlightSuretyServer {
 
     /**
@@ -14,49 +32,14 @@ class FlightSuretyServer {
      */
     constructor() {
         this.app = express();
-        this.initExpress();
-        this.initWeb3();
-        this.registerOracles();
-        this.initControllers();
         this.getInfo();
-        this.start();
-    }
-
-    initExpress() {
-        this.app.set("port", 8000);
-    }
-
-    initWeb3 = async () =>  {
-
-        try {
-            let config = Config['localhost'];
-            this.web3 =
-                await new Web3(new Web3.providers.WebsocketProvider(
-                    config.url.replace('http', 'ws')));
-            this.accounts = await this.web3.eth.getAccounts();
-            this.web3.eth.defaultAccount = this.accounts[0];
-            this.flightSuretyData =
-                new this.web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
-            this.flightSuretyApp =
-                new this.web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
-            console.log('--------- AVAILABLE ACCOUNTS ---------');
-            console.log(this.accounts);
-            console.log('--------------------------------------');
-        } catch(e) {
-            // you might need to start ganache
-            // and deploy your contracts if you get there
-            console.log("\x1b[41m", "Please check that ganache is running ....");
-            console.log(e);
-        }
-    }
-
-    registerOracles = async () => {
-        // let's init with
+        this.initControllers();
     }
 
     initControllers() {
         require("./controllers/ErrorController.js")(this.app);
     }
+
 
     getInfo() {
         this.app.get("/", (req, res) => {
@@ -72,13 +55,6 @@ class FlightSuretyServer {
             })
         });
     }
-
-    start() {
-        let self = this;
-        this.app.listen(this.app.get("port"), () => {
-            console.log(`Server Listening for port: ${self.app.get("port")}`);
-        });
-    }
 }
 
 
@@ -91,7 +67,7 @@ class FlightSuretyServer {
 
 
 */
-
-export default new FlightSuretyServer();
+const app = new FlightSuretyServer();
+export default app;
 
 
