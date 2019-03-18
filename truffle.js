@@ -7,7 +7,7 @@ module.exports = {
             host: '127.0.0.1',
             port: 7545,
             network_id: '*', // Match any network id,
-            accounts: 50,
+            accounts: 50 // looks useless, set it inside Ganache AppImage settings => Accounts / Keys
         },
         // add develop as well as on my local machine
         // truffle dev network is named "develop",
