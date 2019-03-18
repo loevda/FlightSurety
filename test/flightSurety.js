@@ -224,7 +224,7 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-    it('(flight) funded airline can register flight', async () => {
+    /*it('(flight) funded airline can register flight', async () => {
 
         // ARRANGE
         let newAirline = accounts[2];
@@ -240,6 +240,6 @@ contract('Flight Surety Tests', async (accounts) => {
         }
         // ASSERT
         assert.equal(result, false, "Airline should not be able to register an already registered airline");
-    });
+    });*/
 
 });
