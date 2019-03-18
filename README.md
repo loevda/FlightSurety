@@ -50,7 +50,7 @@ Deploy the contents of the ./dapp folder
 ## Credits
 
 ##### Image: 
-* https://pixabay.com/photos/airport-airplane-aircraft-fly-3511342/
+* https://pixabay.com/photos/airport-vnukovo-plane-terminal-1406162/
 
 
 ## Resources
