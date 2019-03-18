@@ -1,9 +1,21 @@
 import DOM from './dom';
 import Contract from './contract';
-import './flightsurety.css';
+import $ from 'jquery';
+window.jQuery = $;
+window.$ = $;
+import 'startbootstrap-agency/vendor/bootstrap/css/bootstrap.css';
+import 'startbootstrap-agency/css/agency.min.css';
+import './css/agency.min.css';
+import './css/app.css';
+import 'startbootstrap-agency/vendor/bootstrap/js/bootstrap.min.js';
+import 'startbootstrap-agency/vendor/jquery-easing/jquery.easing.min.js';
+import './js/agency.js';
 
 
-(async() => {
+
+
+
+/*(async() => {
 
     let result = null;
 
@@ -46,7 +58,7 @@ function display(title, description, results) {
         section.appendChild(row);
     })
     displayDiv.append(section);
-}
+}*/
 
 
 

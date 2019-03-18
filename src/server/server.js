@@ -39,7 +39,7 @@ class ContractsServer  {
         // registering oracles
         const fee = await flightSuretyApp.methods.REGISTRATION_FEE().call();
         const accs = await accounts;
-        // lowest numner of total accounts or config.numOracles
+        // lowest number of total accounts or config.numOracles
         const numOracles = config.numOracles < accs.length
             ? config.numOracles : (accs.length -1)
         // registration loop
