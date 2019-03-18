@@ -1,10 +1,18 @@
 const FlightSuretyApp = artifacts.require("FlightSuretyApp");
 const FlightSuretyData = artifacts.require("FlightSuretyData");
 const fs = require('fs');
+var argv = require('minimist')(process.argv.slice(2), {string: ['firstAirline']});
 
 module.exports = function(deployer) {
-
-    let firstAirline = '0xce3bf475bf23d016ce87c3b49552d03ed66eca34';
+    let firstAirline;
+    try {
+        firstAirline = argv['firstAirline']
+            ? argv['firstAirline']
+            : '0xce3bf475bf23d016ce87c3b49552d03ed66eca34'; // if you want you can update the default first airline here
+    }catch(e) {
+        console.log(e);
+    }
+    console.log(firstAirline);
     deployer.deploy(FlightSuretyData, firstAirline)
     .then(() => {
         return deployer.deploy(FlightSuretyApp, FlightSuretyData.address)

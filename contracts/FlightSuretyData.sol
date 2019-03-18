@@ -85,7 +85,7 @@ contract FlightSuretyData {
 
     modifier requireIsCallerAuthorized()
     {
-        require(authorizedCallers[msg.sender] == 1, "Caller is not contract owner");
+        require(authorizedCallers[msg.sender] == 1, "Caller is not auhtorized");
         _;
     }
 

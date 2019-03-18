@@ -27,17 +27,18 @@ class FlightSuretyServer {
     }
 
     initWeb3 = async () =>  {
-        this.config = Config['localhost'];
+
         try {
+            let config = Config['localhost'];
             this.web3 =
                 await new Web3(new Web3.providers.WebsocketProvider(
-                    this.config.url.replace('http', 'ws')));
+                    config.url.replace('http', 'ws')));
             this.accounts = await this.web3.eth.getAccounts();
             this.web3.eth.defaultAccount = this.accounts[0];
             this.flightSuretyData =
-                new this.web3.eth.Contract(FlightSuretyData.abi, this.config.dataAddress);
+                new this.web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
             this.flightSuretyApp =
-                new this.web3.eth.Contract(FlightSuretyApp.abi, this.config.appAddress);
+                new this.web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
             console.log('--------- AVAILABLE ACCOUNTS ---------');
             console.log(this.accounts);
             console.log('--------------------------------------');
@@ -50,7 +51,7 @@ class FlightSuretyServer {
     }
 
     registerOracles = async () => {
-
+        // let's init with
     }
 
     initControllers() {
@@ -90,10 +91,6 @@ class FlightSuretyServer {
 
 
 */
-
-
-
-
 
 export default new FlightSuretyServer();
 
