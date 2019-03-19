@@ -13,6 +13,15 @@ contract('Flight Surety Tests', async (accounts) => {
   /* Operations and Settings                                                              */
   /****************************************************************************************/
 
+    it(`(caller) is not authorized`, async function () {
+
+        // Get operating status
+        let status = await config.flightSuretyData.isAuth.call(config.flightSuretyApp.address);
+
+        assert.equal(status, true, "Incorrect value for auth user.");
+
+    });
+
   it(`(multiparty) has correct initial isOperational() value`, async function () {
 
     // Get operating status

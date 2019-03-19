@@ -19,10 +19,10 @@ module.exports = function(deployer) {
                 .then(() => {
                     let config = {
                         localhost: {
-                            url: 'http://localhost:7545',//updated to Ganache AppImage port
+                            url: 'http://127.0.0.1:7545',//updated to Ganache AppImage port
                             dataAddress: FlightSuretyData.address,
                             appAddress: FlightSuretyApp.address,
-                            numOracles: 20 // change to increase the number of oracles
+                            numOracles: 20, // change to increase the number of oracles
                         }
                     }
                     fs.writeFileSync(__dirname + '/../src/dapp/config.json',JSON.stringify(config, null, '\t'), 'utf-8');

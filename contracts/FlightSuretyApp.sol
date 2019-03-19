@@ -149,7 +149,7 @@ contract FlightSuretyApp {
     paidEnough(msg.value)
     {
         address(uint160(address(flightSuretyData))).transfer(msg.value);
-        return flightSuretyData.fundAirline(msg.sender);
+        flightSuretyData.fundAirline(msg.sender);
     }
 
     function getNumRegisteredAirlines()
@@ -166,7 +166,7 @@ contract FlightSuretyApp {
     */   
     function registerAirline(address _airline)
     external
-    requireIsAirlineFunded(msg.sender)
+    requireIsAirlineRegistered(msg.sender)
     requireAirlineNotYetRegistered(_airline)
     returns(bool success, uint256 votes)
     {

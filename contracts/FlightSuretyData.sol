@@ -12,7 +12,7 @@ contract FlightSuretyData {
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
 
-    mapping(address => uint256) private authorizedCallers;
+    mapping(address => bool) private authorizedCallers;
 
     struct Airline {
         bool isRegistered;
@@ -39,8 +39,8 @@ contract FlightSuretyData {
     /*                                       EVENT DEFINITIONS                                  */
     /********************************************************************************************/
 
-    event airlineRegistered(address _airline);
-    event airlineFunded(address _airline);
+    event AirlineRegistered(address _airline);
+    event AirlineFunded(address _airline);
 
 
     /**
@@ -85,7 +85,7 @@ contract FlightSuretyData {
 
     modifier requireIsCallerAuthorized()
     {
-        require(authorizedCallers[msg.sender] == 1, "Caller is not auhtorized");
+        require(authorizedCallers[msg.sender] == true, "Caller is not auhtorized");
         _;
     }
 
@@ -114,6 +114,14 @@ contract FlightSuretyData {
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
+
+    function isAuth(address _address)
+    public
+    view
+    returns (bool)
+    {
+        return authorizedCallers[_address];
+    }
 
     function getNumRegisteredAirlines()
     public
@@ -187,7 +195,7 @@ contract FlightSuretyData {
     external
     requireContractOwner
     {
-        authorizedCallers[_contractAddress] = 1;
+        authorizedCallers[_contractAddress] = true;
     }
 
     function deauthorizeCaller
@@ -213,7 +221,7 @@ contract FlightSuretyData {
     requireIsCallerAuthorized
     {
         airlines[_airline].isFunded = true;
-        emit airlineFunded(_airline);
+        emit AirlineFunded(_airline);
     }
 
     function registerAirline (address _newAirline, address _registeringAirline)
@@ -223,7 +231,7 @@ contract FlightSuretyData {
     {
         airlines[_newAirline] = Airline(true, false);
         numRegisteredAirlines = numRegisteredAirlines + 1;
-        emit airlineRegistered(_newAirline);
+        emit AirlineRegistered(_newAirline);
     }
 
 

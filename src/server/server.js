@@ -4,18 +4,17 @@ import Config from './config.json';
 import Web3 from 'web3';
 import express from 'express';
 const bodyParser = require("body-parser");
-require("babel-core/register");
 require("babel-polyfill");
-
-
-// set up contract data
+/*import 'core-js/shim';
+import 'regenerator-runtime/runtime';*/
 
 const config = Config['localhost'];
 const web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
 const accounts = web3.eth.getAccounts();
-web3.eth.defaultAccount = web3.eth.accounts[0];
+web3.eth.defaultAccount = "0xE58d0BD823112817532e2687818116f64C648868"; //web3.eth.accounts[0];
 const flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
 const flightSuretyData = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
+
 
 class ContractsServer  {
 
@@ -26,8 +25,9 @@ class ContractsServer  {
         // add App contract as authorizedCaller
         // to data contract
         try {
-            const address = await flightSuretyApp._address;
-            await flightSuretyData.methods.authorizeCaller(address).call();
+            const address = flightSuretyApp._address;
+            const accs = await accounts;
+            await flightSuretyData.methods.authorizeCaller(address).send({from: accs[0]});
         } catch(err) {
            console.log(err.toString());
            console.error('\x1b[31m Check that Ganache is running and that your config contracts ' +
@@ -83,6 +83,14 @@ class ContractsServer  {
             .on('data', (data) => {
                 console.log(data);
             });
+
+        flightSuretyData.events.AirlineFunded()
+            .on('error', (error) => {
+                console.log(error);
+            })
+            .on('data', (data) => {
+                console.log(data);
+            });
     }
 }
 
@@ -118,6 +126,13 @@ class FlightSuretyServer {
         });
     }
 }
+
+flightSuretyData.events.AirlineFunded({
+    fromBlock: 0
+}, function (error, event) {
+    if (error) console.log(error)
+    console.log(event)
+});
 
 const contractsServer = new ContractsServer();
 contractsServer.init();
