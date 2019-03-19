@@ -30,6 +30,9 @@ class ContractsServer  {
             await flightSuretyData.methods.authorizeCaller(address).call();
         } catch(err) {
            console.log(err.toString());
+           console.error('\x1b[31m Check that Ganache is running and that your config contracts ' +
+               'are correctly deployed.');
+           process.exit();
         }
         this.registerOracles();
         this.listenEvents();
