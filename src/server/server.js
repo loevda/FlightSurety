@@ -127,13 +127,6 @@ class FlightSuretyServer {
     }
 }
 
-flightSuretyData.events.AirlineFunded({
-    fromBlock: 0
-}, function (error, event) {
-    if (error) console.log(error)
-    console.log(event)
-});
-
 const contractsServer = new ContractsServer();
 contractsServer.init();
 const app = new FlightSuretyServer();
