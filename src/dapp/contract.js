@@ -41,8 +41,6 @@ export default class Contract {
         }
     }
 
-
-
     initialize(callback) {
         this.web3.eth.getAccounts((error, accts) => {
             if (accts) {

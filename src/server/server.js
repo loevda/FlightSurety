@@ -91,6 +91,14 @@ class ContractsServer  {
             .on('data', (data) => {
                 console.log(data);
             });
+
+        flightSuretyData.events.AirlineRegistered()
+            .on('error', (error) => {
+                console.log(error);
+            })
+            .on('data', (data) => {
+                console.log(data);
+            });
     }
 }
 

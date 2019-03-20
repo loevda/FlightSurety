@@ -16,14 +16,15 @@ import './js/agency.js';
 
     let contract = new Contract('localhost', () => {
 
-        /*// Read transaction
+        // Read transaction
+
         contract.isOperational((error, result) => {
             console.log(error,result);
-            let appStatus = DOM.elid("appStatus");
-            appStatus.appendChild(DOM.span({}, error ? String(error) : String(result)));
+            let appStatus = DOM.elid("operational");
+            appStatus.appendChild(DOM.div({className: 'led-box'}, error ? DOM.div({className: 'led-red'}) : DOM.div({className: 'led-green'})));
 
             display('Operational Status', 'Check if contract is operational', [ { label: 'Operational Status', error: error, value: result} ]);
-        });*/
+        });
 
 
         DOM.elid('addAirline').addEventListener('click', () => {
