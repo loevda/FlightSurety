@@ -47,6 +47,7 @@ export default class Contract {
         this.web3.eth.getAccounts((error, accts) => {
             if (accts) {
                 this.account = accts[0];
+                console.log(`Now using ${this.account} as default account.`);
             }
             callback();
         });
