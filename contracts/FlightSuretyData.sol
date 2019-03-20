@@ -20,7 +20,7 @@ contract FlightSuretyData {
     }
 
     mapping(address => Airline) public airlines;
-    uint256 private numRegisteredAirlines; // num of voters
+    uint256 private numRegisteredAirlines;
 
     struct Flight {
         bool isRegistered;

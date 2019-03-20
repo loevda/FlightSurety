@@ -166,8 +166,8 @@ contract FlightSuretyApp {
     */   
     function registerAirline(address _airline)
     external
-    requireIsAirlineRegistered(msg.sender)
-    requireAirlineNotYetRegistered(_airline)
+    requireIsAirlineFunded(msg.sender) // check if sended is a funded (and registered airline)
+    requireAirlineNotYetRegistered(_airline) // check if it is already registered
     returns(bool success, uint256 votes)
     {
         if (getNumRegisteredAirlines() < MULTIPARTY_MIN_NUM_AIRLINES) {
