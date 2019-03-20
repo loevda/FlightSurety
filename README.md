@@ -49,7 +49,13 @@ Deploy the contents of the ./dapp folder
 
 ## Credits
 
-##### Image: 
+##### Theme
+*https://startbootstrap.com/themes/agency/
+
+##### Dashboard style
+* https://codepen.io/chonz0/pen/NGRbWj
+
+##### Images: 
 * https://pixabay.com/photos/airport-vnukovo-plane-terminal-1406162/
 
 
