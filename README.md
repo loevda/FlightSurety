@@ -1,6 +1,4 @@
-# FlightSurety
-
-FlightSurety DApp
+# FlightSurety 
 ![DApp screenshot](src/dapp/img/dapp.png?raw=true "Flight Surety DApp")
 
 ## Install
