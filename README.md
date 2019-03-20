@@ -1,6 +1,7 @@
 # FlightSurety
 
-FlightSurety is a sample application project for Udacity's Blockchain course.
+FlightSurety DApp
+![DApp screenshot](src/dapp/img/dapp.png?raw=true "Flight Surety DApp")
 
 ## Install
 
