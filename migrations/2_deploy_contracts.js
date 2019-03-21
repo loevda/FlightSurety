@@ -8,7 +8,7 @@ module.exports = function(deployer) {
     try {
         firstAirline = argv['firstAirline']
             ? argv['firstAirline']
-            : '0xce3bf475bf23d016ce87c3b49552d03ed66eca34'; // if you want you can update the default first airline here
+            : '0xce3bf475bf23d016ce87c3b49552d03ed66eca34'; // Update the default first airline here with your truffle dev accounts[1]
     }catch(e) {
         console.log(e);
     }

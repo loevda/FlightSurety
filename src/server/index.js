@@ -17,6 +17,7 @@ if (module.hot) {
 const server = app;
 let currentApp = app.app;
 server.app.listen(3000);
+console.log("Server listening at http://localhost:3000");
 
 if (module.hot) {
  module.hot.accept('./server', () => {

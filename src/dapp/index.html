@@ -29,10 +29,10 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#airlines">Airlines</a>
+                    <a class="nav-link js-scroll-trigger" href="#insurance">GET INSURANCE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#passengers">Passengers</a>
+                    <a class="nav-link js-scroll-trigger" href="#withdraw">WITHDRAW</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="operational" title="Operational status">
@@ -70,60 +70,32 @@
                 <div class="pane">P</div>
 
             </div>
-            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" href="#airlines">Airlines</a>
-            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" href="#passengers">Passenger</a>
+            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" href="#flights">GET INSURANCE</a>
+            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" href="#withdraw">WITHDRAW</a>
         </div>
     </div>
 </header>
 
 <!-- Contact -->
-<section id="airlines">
+<section id="flights">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">AIRLINES</h2>
+                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE</h2>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">ADDRESS</div>
-                                </div>
-                                <input class="form-control" id="addressID" name="addressID" type="text" placeholder="ID">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">ROLE</div>
-                                </div>
-                                <select class="form-control" id="roleType" name="roleType" required>
-                                    <option value="">- SELECT ONE -</option>
-                                    <option value="GROWER">Grower</option>
-                                    <option value="PRODUCER">Producer</option>
-                                    <option value="WHOLESALER">Wholesaler</option>
-                                    <option value="RETAILER">Retailer</option>
-                                    <option value="CONSUMER">Consumer</option>
-                                </select>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button id="addAirline" class="btn btn-primary btn-xl text-uppercase" data-id="1">ADD</button>
-                        </div>
-                        <div class="col-md-2">
-                            <button id="fundAirline" class="btn btn-primary btn-xl text-uppercase ml-1" data-id="2">FUND</button>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
+        <!-- start flights -->
+
+        <div class="col-md-12">
+
+            <table id="flightsTable" class="flightTable">
+
+            </table>
+
         </div>
+
+        <!-- end flights -->
 
 
     </div>
@@ -131,11 +103,11 @@
 
 
 <!-- Contact -->
-<section id="grapes">
+<!--<section id="grapes">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">GRAPES</h2>
+                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE</h2>
             </div>
         </div>
         <div class="row">
@@ -260,182 +232,10 @@
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
 
-<!-- Contact -->
-<section id="wines">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">WINES</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">UPC</div>
-                                </div>
-                                <input class="form-control" id="itemUPC" name="itemUPC" type="number" min="1" placeholder="UPC">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Owner ID</div>
-                                </div>
-                                <input class="form-control" id="itemOwnerID" name="itemOwnerID" type="text" placeholder="Owner ID" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Producer ID</div>
-                                </div>
-                                <input class="form-control" id="producerID" name="producerID" type="text" placeholder="Producer ID" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <button id="wineFetch" class="btn btn-primary normal mt-1 text-uppercase" data-id="10">FETCH</button>
-                        </div>
-                    </div>
-                </div>
-                <hr class="mb-4" />
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Item SKU</div>
-                                </div>
-                                <input class="form-control" id="itemSKU" name="itemSKU" type="text" placeholder="Item SKU" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Producer Lat.</div>
-                                </div>
-                                <input class="form-control" id="producerLatitute" name="producerLatitute" type="text" placeholder="Producer Latitude">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Wholesaler ID</div>
-                                </div>
-                                <input class="form-control" id="wholesalerID" name="wholesalerID" type="text" placeholder="Wholesaler ID" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Item Price ETH</div>
-                                </div>
-                                <input class="form-control" id="itemPrice" name="itemPrice" type="number" placeholder="Item Price" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Item ID</div>
-                                </div>
-                                <input class="form-control" id="itemID" name="itemID" type="text" placeholder="Item ID" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Grapes IDs</div>
-                                </div>
-                                <input class="form-control" id="grapesIDs" name="grapesIDs" type="text" placeholder="Grapes IDs, e.g.: 1,23.">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Item state</div>
-                                </div>
-                                <input class="form-control" id="itemState" name="itemState" type="text" placeholder="Item state" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Producer Name</div>
-                                </div>
-                                <input class="form-control" id="producerName" name="producerName" type="text" placeholder="Producer Name">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Producer Long.</div>
-                                </div>
-                                <input class="form-control" id="producerLongitude" name="producerLongitude" type="text" placeholder="Producer Longitude">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" id="producerInformation" name="producerInformation" placeholder="Producer Information" required="required" row="10"></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Retailer ID</div>
-                                </div>
-                                <input class="form-control" id="retailerID" name="retailerID" type="text" placeholder="Retailer ID" readonly>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <textarea class="form-control" id="itemInformation" name="itemInformation" placeholder="Item Information" required="required" row="10"></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="col-lg-12 text-center">
-                        <button id="wineProduce" class="btn btn-primary normal text-uppercase" data-id="11">PRODUCE</button>
-                        <button id="winePack" class="btn btn-primary normal text-uppercase" data-id="12">PACK</button>
-                        <button id="wineAddForSale" class="btn btn-primary normal text-uppercase" data-id="13">ADD FOR SALE</button>
-                        <button id="wineBuy" class="btn btn-primary normal text-uppercase" data-id="14">BUY</button>
-                        <button id="wineShip" class="btn btn-primary normal text-uppercase" data-id="15">SHIP</button>
-                        <button id="wineReceive" class="btn btn-primary normal text-uppercase" data-id="16">RECEIVE</button>
-                        <button id="winePurchase" class="btn btn-primary normal text-uppercase" data-id="17">PURCHASE</button>
-                        <button id="wineReset" class="btn btn-primary normal text-uppercase" data-id="18">RESET</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
 
 <div id="allEvents">
     <div class="container">
