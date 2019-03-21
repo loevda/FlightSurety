@@ -46,7 +46,8 @@ contract('Flight Surety Tests', async (accounts) => {
             
   });
 
-  it(`(multiparty) can allow access to setOperatingStatus() for Contract Owner account`, async function () {
+  it(`(multiparty) can allow access to setOperatingStatus() for Contract Owner account`,
+      async function () {
 
       // Ensure that access is allowed for Contract Owner account
       let accessDenied = false;
@@ -61,30 +62,34 @@ contract('Flight Surety Tests', async (accounts) => {
       
   });
 
-  it(`(multiparty) can block access to functions using requireIsOperational when operating status is false`, async function () {
+    it(`(multiparty) can block access to functions using requireIsOperational when operating status is false`,
+        async function () {
 
-      await config.flightSuretyData.setOperatingStatus(false);
+            await config.flightSuretyData.setOperatingStatus(false);
 
-      let reverted = false;
-      try 
-      {
-          await config.flightSurety.setTestingMode(true);
-      }
-      catch(e) {
-          reverted = true;
-      }
-      assert.equal(reverted, true, "Access not blocked for requireIsOperational");      
+            let reverted = false;
+            try
+            {
+                await config.flightSurety.setTestingMode(true);
+            }
+            catch(e) {
+                reverted = true;
+            }
+            assert.equal(reverted, true, "Access not blocked for requireIsOperational");
 
-      // Set it back for other tests to work
-      await config.flightSuretyData.setOperatingStatus(true);
+            // Set it back for other tests to work
+            await config.flightSuretyData.setOperatingStatus(true);
 
-  });
+        });
 
     it('(registered airline) can deposit fund', async () => {
-
+        // get the funding value
+        let funding_value = await config.flightSuretyApp.getAirlineFundingValue.call();
         // ACT FUNDING
         try {
-            await config.flightSuretyApp.fundAirline({from: config.firstAirline, value: config.weiMultiple*12});
+            await config.flightSuretyApp.fundAirline(
+                {from: config.firstAirline,
+                    value: funding_value.toString()});
         }
         catch(e) {
             console.log(e.toString());
@@ -183,17 +188,20 @@ contract('Flight Surety Tests', async (accounts) => {
     it('(airline) can be register using the multiparty consensus', async () => {
 
         // ARRANGE
+        let funding_value = await config.flightSuretyApp.getAirlineFundingValue.call();
+        // get the registered airlines that still need to be funded
         let airline2 = accounts[2];
         let airline3 = accounts[3];
         let airline4 = accounts[4];
+        // get the airline to be registered with the multiparty consensus
         let airline5 = accounts[5];
 
         // ACT -- let airline fund themselves
         // should check also that extra value is returned to the sender
         try {
-            await config.flightSuretyApp.fundAirline({from: airline2, value: config.weiMultiple*12});
-            await config.flightSuretyApp.fundAirline({from: airline3, value: config.weiMultiple*12});
-            await config.flightSuretyApp.fundAirline({from: airline4, value: config.weiMultiple*12});
+            await config.flightSuretyApp.fundAirline({from: airline2, value: funding_value.toString()});
+            await config.flightSuretyApp.fundAirline({from: airline3, value: funding_value.toString()});
+            await config.flightSuretyApp.fundAirline({from: airline4, value: funding_value.toString()});
         }
         catch(e) {
             //console.log(e.toString());

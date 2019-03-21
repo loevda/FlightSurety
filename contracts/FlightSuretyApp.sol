@@ -133,6 +133,14 @@ contract FlightSuretyApp {
     }
 
 
+    function getAirlineFundingValue()
+    public
+    pure
+    returns (uint256)
+    {
+        return AIRLINE_FUNDING_VALUE;
+    }
+
 
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
