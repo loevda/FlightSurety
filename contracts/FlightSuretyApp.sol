@@ -17,7 +17,7 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
     // funding cost
-    uint256 private constant AIRLINE_FUNDING_VALUE = 10 ether;
+    uint256 public constant AIRLINE_FUNDING_VALUE = 10 ether;
     // Multiparty num
     uint256 private constant MULTIPARTY_MIN_NUM_AIRLINES = 4;
     uint256 private constant MULTIPARTY_CONSENSUS_DIVIDER = 2; //50%
@@ -105,6 +105,13 @@ contract FlightSuretyApp {
         _;
     }
 
+    modifier requirePassengerNotInsuredForFlight(bytes32 _flightKey, address _passenger)
+    {
+        require(!flightSuretyData.isPassengerInsuredForFlight(_flightKey, _passenger),
+            "Passenger is already insured for this flight");
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       CONSTRUCTOR                                        */
     /********************************************************************************************/
@@ -130,15 +137,6 @@ contract FlightSuretyApp {
     returns(bool)
     {
         return flightSuretyData.isOperational();  // Modify to call data contract's status
-    }
-
-
-    function getAirlineFundingValue()
-    public
-    pure
-    returns (uint256)
-    {
-        return AIRLINE_FUNDING_VALUE;
     }
 
 
@@ -204,10 +202,11 @@ contract FlightSuretyApp {
     }
 
 
-    function registerFlight()
+    function registerFlight(address _airline, string calldata _flight, uint256 _timestamp, address _passenger)
     external
     view
-    requireIsAirlineFunded(msg.sender)
+    requireIsAirlineFunded(_airline)
+    requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), _passenger)
     returns (bool)
     {
         return (true);
@@ -423,5 +422,6 @@ contract FlightSuretyData {
     function registerAirline (address _newAirline, address _registeringAirline) external;
     function fundAirline(address _airline) payable external;
     function getNumRegisteredAirlines() public view returns (uint256);
+    function isPassengerInsuredForFlight(bytes32 _flightKey, address _passenger) external view returns (bool);
 }
 

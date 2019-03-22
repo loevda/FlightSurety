@@ -84,7 +84,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
     it('(registered airline) can deposit fund', async () => {
         // get the funding value
-        let funding_value = await config.flightSuretyApp.getAirlineFundingValue.call();
+        let funding_value = await config.flightSuretyApp.AIRLINE_FUNDING_VALUE.call();
         // ACT FUNDING
         try {
             await config.flightSuretyApp.fundAirline(
@@ -151,9 +151,15 @@ contract('Flight Surety Tests', async (accounts) => {
         let result4 = await config.flightSuretyData.isAirlineRegistered(airline4);
         // ASSERT
         assert.equal(result4, true, "Fourth airline should be able to be registered");
+    });
+
+
+    it('(5th airline) cannot be registered without multiparty consensus', async () => {
+        // ARRANGE
+        let airline5 = accounts[5];
+        let result = undefined;
 
         // ACT
-
         try {
             await config.flightSuretyApp.registerAirline(airline5, {from: config.firstAirline});
         }
@@ -188,7 +194,7 @@ contract('Flight Surety Tests', async (accounts) => {
     it('(airline) can be register using the multiparty consensus', async () => {
 
         // ARRANGE
-        let funding_value = await config.flightSuretyApp.getAirlineFundingValue.call();
+        let funding_value = await config.flightSuretyApp.AIRLINE_FUNDING_VALUE.call();
         // get the registered airlines that still need to be funded
         let airline2 = accounts[2];
         let airline3 = accounts[3];
@@ -241,7 +247,7 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-    /*it('(flight) funded airline can register flight', async () => {
+    it('(passenger) can buy an insurance for flight', async () => {
 
         // ARRANGE
         let newAirline = accounts[2];
@@ -257,6 +263,6 @@ contract('Flight Surety Tests', async (accounts) => {
         }
         // ASSERT
         assert.equal(result, false, "Airline should not be able to register an already registered airline");
-    });*/
+    });
 
 });

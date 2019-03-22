@@ -34,6 +34,8 @@ contract FlightSuretyData {
 
     mapping (address => uint) pendingWithdrawals; // needed for withdrawal pattern
 
+    mapping (bytes32 => address[]) flightInsuredPassengers;
+
 
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
@@ -114,6 +116,20 @@ contract FlightSuretyData {
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
+
+    function isPassengerInsuredForFlight(bytes32 _flightKey, address _passenger)
+    external
+    view
+    returns (bool)
+    {
+        address[] memory flightAddresses = flightInsuredPassengers[_flightKey];
+        for(uint i = 0; i < flightAddresses.length; i++) {
+            if (flightAddresses[i] == _passenger) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     function isAuth(address _address)
     public
