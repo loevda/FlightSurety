@@ -17,7 +17,7 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
     // insurance cost
-    uint256 public constant INSURANCE_COST = 1 ether;
+    uint256 public constant MAX_INSURANCE_COST = 1 ether;
     uint256 private constant INSURANCE_MULTIPLIER = 150; // 150%
     // funding cost
     uint256 public constant AIRLINE_FUNDING_VALUE = 10 ether;
@@ -123,6 +123,18 @@ contract FlightSuretyApp {
         _;
     }
 
+    modifier requireFlightIsRegistered(bytes32 _flightKey)
+    {
+        require(flightSuretyData.isFlightRegistered(_flightKey));
+        _;
+    }
+
+    modifier requireFlightIsNotLanded(bytes32 _flightKey)
+    {
+        require(!flightSuretyData.isFlightLanded(_flightKey));
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       CONSTRUCTOR                                        */
     /********************************************************************************************/
@@ -164,6 +176,20 @@ contract FlightSuretyApp {
         return flightSuretyData.isFlightRegistered(flightKey);
     }
 
+    function isPassengerInsuredForFlight
+    (
+        address _airline,
+        string memory _flight,
+        uint256 _timestamp,
+        address _passenger
+    )
+    public
+    view
+    returns (bool)
+    {
+        bytes32 flightKey = getFlightKey(_airline, _flight, _timestamp);
+        return flightSuretyData.isPassengerInsuredForFlight(flightKey, _passenger);
+    }
 
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
@@ -178,7 +204,7 @@ contract FlightSuretyApp {
     payable
     requireIsOperational
     requireIsAirlineRegistered(msg.sender)
-    paidEnough(msg.value)
+    paidEnough(AIRLINE_FUNDING_VALUE)
     checkValue(AIRLINE_FUNDING_VALUE)
     {
         address(uint160(address(flightSuretyData))).transfer(msg.value);
@@ -249,19 +275,20 @@ contract FlightSuretyApp {
     function buyInsurance
     (
         address _airline,
-        string calldata _flight,
-        uint256 _timestamp,
-        address _passenger
+        string memory _flight,
+        uint256 _timestamp
     )
-    external
+    public
     payable
-    requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), _passenger)
-    paidEnough(msg.value) // paid too much
+    requireFlightIsRegistered(getFlightKey(_airline, _flight, _timestamp))
+    requireFlightIsNotLanded(getFlightKey(_airline, _flight, _timestamp))
+    requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), msg.sender)
+    checkValue(MAX_INSURANCE_COST) // extra fund will be refunded, no error
     {
         uint256 _amount = msg.value;
         address(uint160(address(flightSuretyData))).transfer(msg.value);
         flightSuretyData.buy(getFlightKey(_airline, _flight, _timestamp),
-            _flight, _passenger, _amount, INSURANCE_MULTIPLIER);
+            msg.sender, _amount, INSURANCE_MULTIPLIER);
     }
     
    /**
@@ -276,9 +303,9 @@ contract FlightSuretyApp {
                                     uint8 statusCode
                                 )
                                 internal
-                                pure
     {
-
+        bytes32 _flightKey = getFlightKey(airline, flight, timestamp);
+        flightSuretyData.updateFlightStatus(_flightKey, statusCode);
     }
 
 
@@ -480,7 +507,9 @@ contract FlightSuretyData {
     function registerFlight(bytes32 _flightKey, address _airline, string calldata _flight, uint256 _timestamp,
         string calldata _departure, string calldata _destination) external;
     function isFlightRegistered(bytes32 _flightKey) public view returns (bool);
-    function buy(bytes32 _flightKey, string calldata _flight, address _passenger,
+    function isFlightLanded(bytes32 _flightKey) public view returns (bool);
+    function buy(bytes32 _flightKey, address _passenger,
         uint256 _amount, uint256 _multiplier) external payable;
+    function updateFlightStatus(bytes32 _flightKey, uint256 _statusCode) external;
 }
 

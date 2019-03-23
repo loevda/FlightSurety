@@ -41,6 +41,7 @@ contract FlightSuretyData {
         // and multiplier from data contract
         uint256 amount;
         uint256 multiplier;
+        bool credited;
     }
     mapping (bytes32 => InsuredData[]) flightInsuredPassengers;
 
@@ -58,6 +59,10 @@ contract FlightSuretyData {
     event AirlineFunded(address _airline);
     event FlightRegistered(bytes32 _flightKey);
     event PassengerInsured(bytes32 _flightKey, address _passenger);
+    event FlightStatusUpdated(bytes32 _flightKey, uint256 _statusCode);
+    event PassengerCredited(address _passenger);
+    event AccountWithdrawal(address _address, uint256 _amount);
+
 
 
     /**
@@ -168,9 +173,9 @@ contract FlightSuretyData {
     view
     returns (bool)
     {
-        InsuredData[] memory flightAddresses = flightInsuredPassengers[_flightKey];
-        for(uint i = 0; i < flightAddresses.length; i++) {
-            if (flightAddresses[i].passenger == _passenger) {
+        InsuredData[] memory insuredPassengers = flightInsuredPassengers[_flightKey];
+        for(uint i = 0; i < insuredPassengers.length; i++) {
+            if (insuredPassengers[i].passenger == _passenger) {
                 return true;
             }
         }
@@ -325,6 +330,16 @@ contract FlightSuretyData {
         emit FlightRegistered(_flightKey);
     }
 
+    function updateFlightStatus(bytes32 _flightKey, uint256 _statusCode)
+    external
+    requireIsOperational
+    requireIsCallerAuthorized
+    requireIsFlightNotLanded(_flightKey)
+    {
+        flights[_flightKey].status_code = _statusCode;
+        emit FlightStatusUpdated(_flightKey, _statusCode);
+    }
+
 
    /**
     * @dev Buy insurance for a flight
@@ -337,7 +352,6 @@ contract FlightSuretyData {
         uint256 _amount,
         uint256 _multiplier)
     external
-    payable
     requireIsOperational
     requireIsCallerAuthorized
     requireFlightRegistered(_flightKey) //
@@ -348,7 +362,8 @@ contract FlightSuretyData {
         flightInsuredPassengers[_flightKey].push(InsuredData(
             _passenger,
             _amount,
-            _multiplier
+            _multiplier,
+            false
         ));
         emit PassengerInsured(_flightKey, _passenger);
     }
@@ -356,10 +371,30 @@ contract FlightSuretyData {
     /**
      *  @dev Credits payouts to insurees
     */
-    function creditInsurees ()
+    function creditInsurees (bytes32 _flightKey)
     external
-    pure
+    requireIsOperational
+    requireIsCallerAuthorized
     {
+        //
+        for (uint i = 0; i < flightInsuredPassengers[_flightKey].length; i++) {
+            if (flightInsuredPassengers[_flightKey][i].credited == false) {
+                // credited to true
+                flightInsuredPassengers[_flightKey][i].credited = true;
+                uint amount = calcPremium(flightInsuredPassengers[_flightKey][i].amount,
+                    flightInsuredPassengers[_flightKey][i].multiplier);
+                pendingWithdrawals[flightInsuredPassengers[_flightKey][i].passenger] += amount;
+                emit PassengerCredited(flightInsuredPassengers[_flightKey][i].passenger);
+            }
+        }
+    }
+
+    function calcPremium(uint _amount, uint _multiplier)
+    private
+    pure
+    returns (uint)
+    {
+        return _amount.mul(_multiplier).div(100);
     }
     
 
@@ -367,10 +402,16 @@ contract FlightSuretyData {
      *  @dev Transfers eligible payout funds to insuree
      *
     */
-    function pay ()
+    function pay (address _address)
     external
-    pure
+    requireIsOperational
+    requireIsCallerAuthorized
     {
+        require(pendingWithdrawals[_address] > 0, "No fund available for withdrawal");
+        uint256 amount = pendingWithdrawals[_address];
+        pendingWithdrawals[_address] = 0;
+        address(uint160(address(_address))).transfer(amount);
+        emit AccountWithdrawal(_address, amount);
     }
 
    /**

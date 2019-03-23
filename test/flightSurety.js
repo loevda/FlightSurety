@@ -195,12 +195,6 @@ contract('Flight Surety Tests', async (accounts) => {
 
             // ARRANGE
             let funding_value = await config.flightSuretyApp.AIRLINE_FUNDING_VALUE.call();
-            // get the registered airlines that still need to be funded
-            /*let airline2 = accounts[2];
-            let airline3 = accounts[3];
-            let airline4 = accounts[4];
-            // get the airline to be registered with the multiparty consensus
-            let airline5 = accounts[5];*/
 
             // ACT -- let airline fund themselves
             // should check also that extra value is returned to the sender
@@ -302,4 +296,85 @@ contract('Flight Surety Tests', async (accounts) => {
         });
     });
 
+    describe('(passenger) flight insurance', function(){
+
+        const timestamp = Math.floor(Date.now() / 1000);
+        const passenger1 = accounts[10];
+        const passenger2 = accounts[11];
+
+        it('(passenger) cannot buy an insurance for an unregistered flight', async () => {
+
+            // ARRANGE
+            let result = undefined;
+
+            // ACT
+            try {
+                result = await config.flightSuretyApp.buyInsurance(config.firstAirline, "AF002", timestamp,
+                    {from: passenger1, value: web3.utils.toWei('1', 'ether') });
+            }
+            catch(e) {
+                //
+            }
+            // check
+            result = await config.flightSuretyApp.isPassengerInsuredForFlight(config.firstAirline,
+                "AF002", timestamp, passenger1);
+            // assert
+            assert.equal(result, false, "Passenger should not be able to buy insurance for a flight that is not registered");
+        });
+
+
+        it('(passenger) can buy an insurance for a registered flight that is not landed', async () => {
+
+            // ARRANGE
+            let result = undefined;
+
+            try {
+                await config.flightSuretyApp.registerFlight("AF002", timestamp,
+                    "LONDON", "EL PASO", {from: config.firstAirline});
+            }
+            catch(e) {
+                //
+                console.log(e.toString());
+            }
+
+            // ACT
+            try {
+                await config.flightSuretyApp.buyInsurance(config.firstAirline, "AF002", timestamp,
+                    {from: passenger1, value: web3.utils.toWei('1', 'ether')});
+            }
+            catch(e) {
+                //
+            }
+            // check
+            result = await config.flightSuretyApp.isPassengerInsuredForFlight(config.firstAirline,
+                "AF002", timestamp, passenger1);
+            // assert
+            assert.equal(result, true, "Passenger should be able to buy insurance for a registered flight that is not landed");
+        });
+
+        it('(passenger) cannot buy twice an insurance for the same registered flight', async () => {
+
+            // ARRANGE
+            let result = undefined;
+
+            // ACT
+            try {
+
+                result = await config.flightSuretyApp.buyInsurance(config.firstAirline, "AF002", timestamp,
+                    {from: passenger1, value: web3.utils.toWei('1', 'ether')});
+            }
+            catch(e) {
+                // should revert
+                result = false;
+            }
+            // check
+            /*result = await config.flightSuretyApp.isPassengerInsuredForFlight(config.firstAirline,
+                "AF002", timestamp, passenger1);*/
+            // assert
+            assert.equal(result, false, "Passenger should not be able to buy twice an insurance for the same registered flight");
+        });
+    });
+
 });
+
+// test ./test/flightSurety.js
