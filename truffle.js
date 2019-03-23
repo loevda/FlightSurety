@@ -1,4 +1,5 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
+// update to your seed
 var mnemonic = "cabbage carpet reject power doctor public abandon behave asthma rose pretty marine";
 
 module.exports = {

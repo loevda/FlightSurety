@@ -85,10 +85,6 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-
-
-
-
     describe('(airline) Airlines registration', function(){
 
         // ARRANGE
