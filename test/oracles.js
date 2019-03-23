@@ -80,7 +80,6 @@ contract('Oracles', async (accounts) => {
                         return ev.flight === flight;
                     });
 
-
                     try {
                         truffleAssert.eventEmitted(r, 'FlightStatusInfo', (ev) => {
                             console.log('FlightStatusInfo emmitted');
@@ -90,8 +89,6 @@ contract('Oracles', async (accounts) => {
                     catch (e) {
                         console.log('FlightStatusInfo not emmitted');
                     }
-
-
                 }
                 catch (e) {
                     //console.log(e)

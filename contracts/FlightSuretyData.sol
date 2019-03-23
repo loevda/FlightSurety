@@ -127,6 +127,21 @@ contract FlightSuretyData {
         msg.sender.transfer(amountToReturn);
     }
 
+    modifier requireFlightRegistered(bytes32 _flightKey) {
+        require(flights[_flightKey].isRegistered == true, "Flight is not registered");
+        _;
+    }
+
+    modifier requireFlightNotYetRegistered(bytes32 _flightKey) {
+        require(!flights[_flightKey].isRegistered, "Flight is already registered");
+        _;
+    }
+
+    modifier requireIsFlightNotLanded(bytes32 _flightKey) {
+        require(flights[_flightKey].status_code == 0, "Flight has already landed");
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
@@ -273,6 +288,7 @@ contract FlightSuretyData {
 
     function registerAirline (address _newAirline, address _registeringAirline)
     external
+    requireIsOperational
     requireIsCallerAuthorized
     requireIsAirlineFunded(_registeringAirline)
     {
@@ -292,8 +308,10 @@ contract FlightSuretyData {
     )
     public
     payable
+    requireIsOperational
     requireIsCallerAuthorized
     requireIsAirlineFunded(_airline)
+    requireFlightNotYetRegistered(_flightKey)
     {
         flights[_flightKey] = Flight(
             true,
@@ -320,7 +338,12 @@ contract FlightSuretyData {
         uint256 _multiplier)
     external
     payable
+    requireIsOperational
     requireIsCallerAuthorized
+    requireFlightRegistered(_flightKey) //
+    // we should have a proper mechanism to decide if the insurance can still be purchased
+    // but for now this will suffice
+    requireIsFlightNotLanded(_flightKey)
     {
         flightInsuredPassengers[_flightKey].push(InsuredData(
             _passenger,
