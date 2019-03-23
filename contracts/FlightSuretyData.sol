@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity = 0.5.6;
 
 import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
@@ -9,32 +9,45 @@ contract FlightSuretyData {
     /*                                       DATA VARIABLES                                     */
     /********************************************************************************************/
 
+    // contract
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
-
     mapping(address => bool) private authorizedCallers;
 
+    // airlines
     struct Airline {
         bool isRegistered;
         bool isFunded;
     }
-
     mapping(address => Airline) public airlines;
     uint256 private numRegisteredAirlines;
 
+    // flights
     struct Flight {
         bool isRegistered;
-        uint8 statusCode;
-        uint256 landingTimeStamp;
-        uint256 updatedTimestamp;
         address airline;
+        string flight;
+        string departure;
+        string destination;
+        uint timestamp;
+        uint256 status_code; // if greater than 0 then it is landed
     }
-    mapping(bytes32 => Flight) private flights;
+    mapping (bytes32 => Flight) flights;
+
+    // insurance
+    struct InsuredData {
+        address passenger;
+        // used to decouple insurance price
+        // and multiplier from data contract
+        uint256 amount;
+        uint256 multiplier;
+    }
+    mapping (bytes32 => InsuredData[]) flightInsuredPassengers;
+
+    // needed for withdrawal pattern
+    mapping (address => uint) pendingWithdrawals;
 
 
-    mapping (address => uint) pendingWithdrawals; // needed for withdrawal pattern
-
-    mapping (bytes32 => address[]) flightInsuredPassengers;
 
 
     /********************************************************************************************/
@@ -43,6 +56,8 @@ contract FlightSuretyData {
 
     event AirlineRegistered(address _airline);
     event AirlineFunded(address _airline);
+    event FlightRegistered(bytes32 _flightKey);
+    event PassengerInsured(bytes32 _flightKey, address _passenger);
 
 
     /**
@@ -106,7 +121,6 @@ contract FlightSuretyData {
     }
 
 
-
     modifier checkValue(uint256 _price) {
         _;
         uint amountToReturn = msg.value - _price;
@@ -117,14 +131,31 @@ contract FlightSuretyData {
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
 
+    function isFlightLanded(bytes32 _flightKey)
+    public
+    view
+    returns (bool)
+    {
+        return flights[_flightKey].status_code > 0;
+    }
+
+    function isFlightRegistered(bytes32 _flightKey)
+    public
+    view
+    returns (bool)
+    {
+        return flights[_flightKey].isRegistered;
+    }
+
+
     function isPassengerInsuredForFlight(bytes32 _flightKey, address _passenger)
     external
     view
     returns (bool)
     {
-        address[] memory flightAddresses = flightInsuredPassengers[_flightKey];
+        InsuredData[] memory flightAddresses = flightInsuredPassengers[_flightKey];
         for(uint i = 0; i < flightAddresses.length; i++) {
-            if (flightAddresses[i] == _passenger) {
+            if (flightAddresses[i].passenger == _passenger) {
                 return true;
             }
         }
@@ -250,16 +281,53 @@ contract FlightSuretyData {
         emit AirlineRegistered(_newAirline);
     }
 
+    function registerFlight
+    (
+        bytes32 _flightKey,
+        address _airline,
+        string memory _flight,
+        uint256 _timestamp,
+        string memory _departure,
+        string memory _destination
+    )
+    public
+    payable
+    requireIsCallerAuthorized
+    requireIsAirlineFunded(_airline)
+    {
+        flights[_flightKey] = Flight(
+            true,
+            _airline,
+            _flight,
+            _departure,
+            _destination,
+            _timestamp,
+            0
+        );
+        emit FlightRegistered(_flightKey);
+    }
+
 
    /**
     * @dev Buy insurance for a flight
     *
     */   
-    function buy ()
+    function buy
+    (
+        bytes32 _flightKey,
+        address _passenger,
+        uint256 _amount,
+        uint256 _multiplier)
     external
     payable
+    requireIsCallerAuthorized
     {
-
+        flightInsuredPassengers[_flightKey].push(InsuredData(
+            _passenger,
+            _amount,
+            _multiplier
+        ));
+        emit PassengerInsured(_flightKey, _passenger);
     }
 
     /**

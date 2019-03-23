@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity = 0.5.6;
 
 // It's important to avoid vulnerabilities due to numeric overflow bugs
 // OpenZeppelin's SafeMath library, when used correctly, protects agains such bugs
@@ -16,6 +16,9 @@ contract FlightSuretyApp {
     /*                                       DATA VARIABLES                                     */
     /********************************************************************************************/
 
+    // insurance cost
+    uint256 public constant INSURANCE_COST = 1 ether;
+    uint256 private constant INSURANCE_MULTIPLIER = 150; // 150%
     // funding cost
     uint256 public constant AIRLINE_FUNDING_VALUE = 10 ether;
     // Multiparty num
@@ -34,14 +37,6 @@ contract FlightSuretyApp {
 
     address private contractOwner;     // Account used to deploy contract
     FlightSuretyData flightSuretyData; // data contract
-
-    struct Flight {
-        bool isRegistered;
-        uint8 statusCode;
-        uint256 updatedTimestamp;        
-        address airline;
-    }
-    mapping(bytes32 => Flight) private flights;
 
 
     /********************************************************************************************/
@@ -99,6 +94,16 @@ contract FlightSuretyApp {
         _;
     }
 
+
+    // Define a modifier that checks the price and refunds the remaining balance
+    modifier checkValue(uint256 _amount) {
+        _;
+        uint amountToReturn = msg.value - _amount;
+        msg.sender.transfer(amountToReturn);
+    }
+
+
+
     modifier requireAirlineNotYetRegistered(address _airline)
     {
         require(!flightSuretyData.isAirlineRegistered(_airline), "Airline has already been registered");
@@ -109,6 +114,12 @@ contract FlightSuretyApp {
     {
         require(!flightSuretyData.isPassengerInsuredForFlight(_flightKey, _passenger),
             "Passenger is already insured for this flight");
+        _;
+    }
+
+    modifier requireFlightNotRegistered(bytes32 _flightKey)
+    {
+        require(!flightSuretyData.isFlightRegistered(_flightKey));
         _;
     }
 
@@ -139,6 +150,20 @@ contract FlightSuretyApp {
         return flightSuretyData.isOperational();  // Modify to call data contract's status
     }
 
+    function isFlightRegistered
+    (
+        address _airline,
+        string memory _flight,
+        uint256 _timestamp
+    )
+    public
+    view
+    returns (bool)
+    {
+        bytes32 flightKey = getFlightKey(_airline, _flight, _timestamp);
+        return flightSuretyData.isFlightRegistered(flightKey);
+    }
+
 
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
@@ -151,8 +176,10 @@ contract FlightSuretyApp {
     function fundAirline()
     external
     payable
+    requireIsOperational
     requireIsAirlineRegistered(msg.sender)
     paidEnough(msg.value)
+    checkValue(AIRLINE_FUNDING_VALUE)
     {
         address(uint160(address(flightSuretyData))).transfer(msg.value);
         flightSuretyData.fundAirline(msg.sender);
@@ -172,6 +199,7 @@ contract FlightSuretyApp {
     */   
     function registerAirline(address _airline)
     external
+    requireIsOperational
     requireIsAirlineFunded(msg.sender) // check if sended is a funded (and registered airline)
     requireAirlineNotYetRegistered(_airline) // check if it is already registered
     returns(bool success, uint256 votes)
@@ -201,15 +229,39 @@ contract FlightSuretyApp {
         }
     }
 
-
-    function registerFlight(address _airline, string calldata _flight, uint256 _timestamp, address _passenger)
+    function registerFlight
+    (
+        string calldata _flight,
+        uint256 _timestamp,
+        string calldata _departure,
+        string calldata _destination
+    )
     external
-    view
-    requireIsAirlineFunded(_airline)
-    requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), _passenger)
-    returns (bool)
+    requireIsOperational
+    requireIsAirlineFunded(msg.sender)
+    requireFlightNotRegistered(getFlightKey(msg.sender, _flight, _timestamp))
     {
-        return (true);
+        bytes32 flightKey = getFlightKey(msg.sender, _flight, _timestamp);
+        flightSuretyData.registerFlight(flightKey, msg.sender, _flight,
+            _timestamp, _departure, _destination);
+    }
+
+    function buyInsurance
+    (
+        address _airline,
+        string calldata _flight,
+        uint256 _timestamp,
+        address _passenger
+    )
+    external
+    payable
+    requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), _passenger)
+    paidEnough(msg.value) // paid too much
+    {
+        uint256 _amount = msg.value;
+        address(uint160(address(flightSuretyData))).transfer(msg.value);
+        flightSuretyData.buy(getFlightKey(_airline, _flight, _timestamp),
+            _flight, _passenger, _amount, INSURANCE_MULTIPLIER);
     }
     
    /**
@@ -226,6 +278,7 @@ contract FlightSuretyApp {
                                 internal
                                 pure
     {
+
     }
 
 
@@ -422,6 +475,12 @@ contract FlightSuretyData {
     function registerAirline (address _newAirline, address _registeringAirline) external;
     function fundAirline(address _airline) payable external;
     function getNumRegisteredAirlines() public view returns (uint256);
-    function isPassengerInsuredForFlight(bytes32 _flightKey, address _passenger) external view returns (bool);
+    function isPassengerInsuredForFlight(bytes32 _flightKey, address _passenger)
+        external view returns (bool);
+    function registerFlight(bytes32 _flightKey, address _airline, string calldata _flight, uint256 _timestamp,
+        string calldata _departure, string calldata _destination) external;
+    function isFlightRegistered(bytes32 _flightKey) public view returns (bool);
+    function buy(bytes32 _flightKey, string calldata _flight, address _passenger,
+        uint256 _amount, uint256 _multiplier) external payable;
 }
 

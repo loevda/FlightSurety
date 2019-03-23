@@ -1,6 +1,7 @@
 var Test = require('../config/testConfig.js');
 var BigNumber = require('bignumber.js');
 var web3 = require('web3');
+const truffleAssert = require('truffle-assertions');
 
 contract('Flight Surety Tests', async (accounts) => {
     var config;
@@ -210,7 +211,7 @@ contract('Flight Surety Tests', async (accounts) => {
             await config.flightSuretyApp.fundAirline({from: airline4, value: funding_value.toString()});
         }
         catch(e) {
-            //console.log(e.toString());
+            //
         }
 
         try {
@@ -247,22 +248,43 @@ contract('Flight Surety Tests', async (accounts) => {
     });
 
 
-    it('(passenger) can buy an insurance for flight', async () => {
+    it('(airline) cannot register a flight if it is not funded', async () => {
 
         // ARRANGE
-        let newAirline = accounts[2];
         let result = undefined;
+        let airline = accounts[5];
+        const timestamp = Math.floor(Date.now() / 1000);
 
         // ACT
         try {
-            result = await config.flightSuretyApp.registerAirline(newAirline);
+            result = await config.flightSuretyApp.registerFlight("AF001", timestamp, "PARIS", "EL PASO", {from: airline});
         }
         catch(e) {
             //should revert here
             result = false;
         }
         // ASSERT
-        assert.equal(result, false, "Airline should not be able to register an already registered airline");
+        assert.equal(result, false, "Airline should not be able to register a flight if it is not funded");
+    });
+
+    it('(airline) can register a flight if it is funded', async () => {
+
+        // ARRANGE
+        let result = undefined;
+        const timestamp = Math.floor(Date.now() / 1000);
+
+        // ACT
+        try {
+            await config.flightSuretyApp.registerFlight("AF001", timestamp,
+                "PARIS", "EL PASO", {from: config.firstAirline});
+            result = await config.flightSuretyApp.isFlightRegistered(config.firstAirline, "AF001", timestamp);
+        }
+        catch(e) {
+            //
+        }
+
+        // assert
+        assert.equal(result, true, "Airline should be able to register a flight if it is funded");
     });
 
 });
