@@ -9,6 +9,7 @@
     <meta name="author" content="">
 
     <title>FlightSurety DApp</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Bangers|Work+Sans:300,400,700,900|Orbitron|Montserrat:400,700|Kaushan+Script|Droid+Serif:400,700,400italic,700italic|Roboto+Slab:400,100,300,700" rel="stylesheet">
@@ -29,10 +30,10 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#insurance">GET INSURANCE</a>
+                    <a class="nav-link js-scroll-trigger" href="#flights">AIRLINES</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#withdraw">WITHDRAW</a>
+                    <a class="nav-link js-scroll-trigger" href="#passengers">PASSENGERS</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="operational" title="Operational status">
@@ -47,7 +48,9 @@
 <header class="masthead">
     <div class="container">
         <div class="intro-text">
-            <div class="intro-lead-in orbitron fs30 fw300">Flight Delay Insurance on the Ethereum Blockchain</div>
+            <div class="intro-lead-in orbitron fs30 fw300">
+                Flight Delay Insurance on the Ethereum Blockchain
+            </div>
             <div class="intro-heading text-uppercase orbitron">
 
                 <div class="pane">F</div>
@@ -70,8 +73,10 @@
                 <div class="pane">P</div>
 
             </div>
-            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" href="#flights">GET INSURANCE</a>
-            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" href="#withdraw">WITHDRAW</a>
+            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron"
+               href="#flights">AIRLINES</a>
+            <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron"
+               href="#passengers">PASSENGERS</a>
         </div>
     </div>
 </header>
@@ -81,18 +86,118 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE</h2>
+                <h2 class="section-heading text-uppercase smoke">
+                    <div class="pane">A</div>
+                    <div class="pane">I</div>
+                    <div class="pane">R</div>
+                    <div class="pane">L</div>
+                    <div class="pane">I</div>
+                    <div class="pane">N</div>
+                    <div class="pane">E</div>
+                    <div class="pane">S</div>
+                </h2>
+                <hr class="mb-4" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-uppercase smoke">FUND 10 ETH TO INSURANCE SCHEME</h2>
+                <p class="text-center">
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
+                        SEND FUND
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-uppercase smoke mt30">REGISTER FLIGHTS</h2>
+                <div class="form-group">
+                    <div class="input-group">
+                        <select class="form-control"></select>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">&rightarrow;&nbsp;REGISTER FLIGHT</button>
+                        </div>
+
+                        <p class="help-block text-danger"></p>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="passengers">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+
+                <h2 class="section-heading text-uppercase smoke">
+                    <div class="pane">P</div>
+                    <div class="pane">A</div>
+                    <div class="pane">S</div>
+                    <div class="pane">S</div>
+                    <div class="pane">E</div>
+                    <div class="pane">N</div>
+                    <div class="pane">G</div>
+                    <div class="pane">E</div>
+                    <div class="pane">R</div>
+                    <div class="pane">S</div>
+                </h2>
+                <hr class="mb-4" />
             </div>
         </div>
 
+
+
         <!-- start flights -->
 
-        <div class="col-md-12">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE</h2>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">AMOUNT</div>
+                        </div>
+                        <input class="form-control" id="insAmount" name="insAmount" type="number" placeholder="Max. 1 ETH, Min. 1 ETH, just like democracy, your choice ...." min="1" max="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">FLIGHT</div>
+                        </div>
+                        <select class="form-control"></select>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">&rightarrow;&nbsp;PURCHASE</button>
+                        </div>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                </div>
 
-            <table id="flightsTable" class="flightTable">
-
-            </table>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center mt50">
+                <h2 class="section-heading text-uppercase smoke mb40">
+                    YOU CAN CLAIM <span id="claimAmount">0 ETH</span> FOR NOW!
+                    <br /><span class="fs22"><i>just keep purchasing insurance and rolling the flight status to try your luck!</i></span>
+                </h2>
+                <p>
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
+                        FETCH FLIGHT STATUS
+                    </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
+                        CLAIM PREMIUM
+                    </button>
+                </p>
+            </div>
         </div>
 
         <!-- end flights -->

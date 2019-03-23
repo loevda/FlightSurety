@@ -33,7 +33,7 @@ import './js/agency.js';
     }
 
 
-    flights().map((flight) => {
+    /*flights().map((flight) => {
         let tr = DOM.tr();
         let td = DOM.td();
         let d = new Date(flight.timestamp*1000)
@@ -48,7 +48,7 @@ import './js/agency.js';
 
     formatSplitText = () => {
 
-    }
+    }*/
 
 
 
@@ -64,12 +64,12 @@ import './js/agency.js';
             appStatus.appendChild(DOM.div({className: 'led-box'}, error ? DOM.div({className: 'led-red'}) : DOM.div({className: 'led-green'})));
         });
 
-
+/*
         DOM.elid('addAirline').addEventListener('click', () => {
-            /*contract.authorizeCaller((error, result) => {
+            /!*contract.authorizeCaller((error, result) => {
              alert(error, result);
              console.log(error, result);
-             })*/
+             })*!/
             contract.isFunded((error, result) => {
                 console.log(error, result);
             });
@@ -77,14 +77,14 @@ import './js/agency.js';
 
 
         DOM.elid('fundAirline').addEventListener('click', () => {
-            /*contract.authorizeCaller((error, result) => {
+            /!*contract.authorizeCaller((error, result) => {
                 alert(error, result);
                 console.log(error, result);
-            })*/
+            })*!/
             contract.fundAirline((error, result) => {
                 console.log(error, result);
             });
-        });
+        });*/
 
 
         // User-submitted transaction
