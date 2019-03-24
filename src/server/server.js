@@ -4,6 +4,7 @@ import Config from './config.json';
 import Web3 from 'web3';
 import express from 'express';
 const bodyParser = require("body-parser");
+const cors = require('cors');
 require("babel-polyfill");
 /*import 'core-js/shim';
 import 'regenerator-runtime/runtime';*/
@@ -159,8 +160,7 @@ class FlightSuretyServer {
     initExpressMiddleWare() {
         this.app.use(bodyParser.urlencoded({extended:true}));
         this.app.use(bodyParser.json());
-        res.header('Access-Control-Allow-Origin', '*')
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+        this.app.use(cors());
     }
 
     getFlights() {
