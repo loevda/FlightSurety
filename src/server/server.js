@@ -22,6 +22,8 @@ class ContractsServer  {
     constructor () {
         this.flightsForPurchase = [];
         this.flightsLanded = [];
+        this.oracles = [];
+        this.status = [0,10,20,30,40,50];
     }
 
     init = async () => {
@@ -44,19 +46,44 @@ class ContractsServer  {
 
     registerOracles = async () => {
         // registering oracles
+        let self = this;
         const fee = await flightSuretyApp.methods.REGISTRATION_FEE().call();
         const accs = await accounts;
         // lowest number of total accounts or config.numOracles
         const numOracles = config.numOracles < accs.length
             ? config.numOracles : (accs.length -1)
-        // registration loop
+        // registration loop, starts from 1 to skip contract owner
         for (var i = 1; i < numOracles; i++) {
             try {
+                self.oracles.push(accs[i]);
                 await flightSuretyApp.methods.registerOracle().send({
                     from: accs[i], value: fee, gas:3000000 //VM errors with no gas
                 });
             } catch (err) {
                 console.log(err.toString());
+            }
+        }
+    }
+
+    submitOracleResponse = async(airline, flight, timestamp) => {
+        let self = this;
+        for (let i = 0; i < self.oracles.length; i++) {
+            const statusCode = self.status[Math.floor(Math.random() * self.status.length)];
+            try {
+                idxs = await flightSuretyApp.methods.getMyIndexes().send({from: self.oracles[i]});
+            } catch(error) {
+                console.log(error);
+            }
+            if (idxs) {
+                for (let y = 0; y < idxs.length; y++) {
+                    try {
+                        await flightSuretyApp.methods
+                            .submitOracleResponse(idxs[y], airline, flight, timestamp, statusCode)
+                            .send({ from: self.oracles[i] });
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
             }
         }
     }
@@ -86,65 +113,60 @@ class ContractsServer  {
 
     listenEvents = async () => {
 
-        flightSuretyApp.events.OracleReport()
-            .on('error', (error) => {
-                console.log(error);
-            })
-            .on('data', (data) => {
-                console.log(data);
-            });
+        let self = this;
+
+        flightSuretyApp.events.OracleReport({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error)
+            console.log(`OracleReport: ${event}`);
+        });
 
 
-        flightSuretyApp.events.OracleRequest()
-            .on('error', (error) => {
-                console.log(error);
-            })
-            .on('data', (data) => {
-                console.log(data);
-            });
+        flightSuretyApp.events.OracleRequest({
+            fromBlock: 0
+        }, async (error, event) => {
+            if (error) console.log(error)
+            console.log(`OracleRequest: ${event}`);
+            // get the data
+            const {airline, flight, timestamp} = event.returnValues;
+            await self.submitOracleResponse(airline, flight, timestamp);
+        });
 
-        flightSuretyApp.events.FlightStatusInfo()
-            .on('error', (error) => {
-                console.log(error);
-            })
-            .on('data', (data) => {
-                console.log(data);
-            });
+        flightSuretyApp.events.FlightStatusInfo({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error)
+            console.log(`FlightStatusInfo: ${event}`);
+        });
 
-        flightSuretyData.events.AirlineFunded()
-            .on('error', (error) => {
-                console.log(error);
-            })
-            .on('data', (data) => {
-                console.log(data);
-            });
+        flightSuretyData.events.AirlineFunded({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error)
+            console.log(`AirlineFunded: ${event}`);
+        });
 
-        flightSuretyData.events.AirlineRegistered()
-            .on('error', (error) => {
-                console.log(error);
-            })
-            .on('data', (data) => {
-                console.log(data);
-            });
+        flightSuretyData.events.AirlineRegistered({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error)
+            console.log(`AirlineRegistered: ${event}`);
+        });
 
-        flightSuretyData.events.FlightRegistered()
-            .on('error', (error) => {
-                console.log(error);
-            })
-            .on('data', (data) => {
-                console.log(data);
-                // update the list of flights
-                this.getRegisteredFlights();
-            });
+        flightSuretyData.events.FlightRegistered({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error)
+            console.log(`FlightRegistered: ${event}`);
+            this.getRegisteredFlights();
+        });
     }
 }
 
 
 class FlightSuretyServer {
 
-    /**
-     * Constructor that allows initialize the class
-     */
     constructor(constractsServer) {
         this.app = express();
         this.contractServer = contractsServer;
@@ -174,7 +196,6 @@ class FlightSuretyServer {
         })
     }
 
-
     getInfo() {
         this.app.get("/", (req, res) => {
             res.json({
@@ -183,6 +204,10 @@ class FlightSuretyServer {
                         "/": {
                             method: "GET",
                             description: `An API for use with your Dapp`
+                        },
+                        "/flights": {
+                            method: "GET",
+                            description: `List of flights`
                         }
                     }
                 ]

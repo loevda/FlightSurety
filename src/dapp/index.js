@@ -145,7 +145,16 @@ const web3 = new Web3(); // utils conversion tool needed here ....
         });
 
         DOM.elid('statusForFlight').addEventListener('click', () => {
-
+            try {
+                let data = $("#flightsPurchase").val().split('-');
+                if (data.length === 3) {
+                    contract.fetchFlightStatus(data[0], data[1], data[2], (error, result) => {
+                        console.log(error, result);
+                    });
+                }
+            }catch(e){
+                console.log("Invalid data");
+            }
         });
     });
 
