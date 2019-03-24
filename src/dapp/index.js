@@ -10,8 +10,7 @@ import './css/app.css';
 import 'startbootstrap-agency/vendor/bootstrap/js/bootstrap.min.js';
 import './js/agency.js';
 import Web3 from 'web3';
-
-const web3 = new Web3();
+const web3 = new Web3(); // utils conversion tool needed here ....
 
 
 (async() => {
@@ -20,30 +19,26 @@ const web3 = new Web3();
 
     function getFlights() {
         (async() => {
+            console.log('updating flights ....');
             try {
                 let response = await fetch('http://localhost:3000/flights');
-                let flights = response.json();
+                let flights = await response.json();
+                $("#flightsPurchase").val(null);
                 for (let i=0; i < flights.flightsForPurchase.length; i++) {
                     let flight = flights.flightsForPurchase[i];
                     $("#flightsPurchase").append(
                         new Option(`${flight.flight} ${flight.departure}/${flight.destination}`,
-                            `${flight.flightKey}`));
+                            `${flight.airline}-${flight.flight}-${flight.timestamp}`));
                 }
             }catch(e) {
                 console.log(e);
             }
         })();
     }
-
     getFlights();
 
-
     let contract = new Contract('localhost', () => {
-
-
-
         // Read transaction
-
         contract.isOperational((error, result) => {
             if (error) {
                 console.log(error);
@@ -112,7 +107,6 @@ const web3 = new Web3();
 
         });
 
-
         DOM.elid('fundAirline').addEventListener('click', () => {
             contract.fundAirline((error, result) => {
                 console.log(error, result);
@@ -132,6 +126,18 @@ const web3 = new Web3();
             }
         });
 
+        DOM.elid('purchaseForFlight').addEventListener('click', () => {
+            try {
+                let data = $("#flightsPurchase").val().split('-');
+                if (data.length === 3) {
+                    contract.buyInsurance(data[0], data[1], data[2], (error, result) => {
+                        console.log(error, result);
+                     });
+                }
+            }catch(e){
+                console.log("Invalid data");
+            }
+        });
     });
 
 })();

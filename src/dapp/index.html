@@ -205,7 +205,10 @@
 
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE FOR <span class="underlined"><span id="insPrice"></span> ETH</span></h2>
+                <h2 class="section-heading text-uppercase smoke">
+                    PURCHASE FLIGHT DELAY INSURANCE FOR <span class="underlined"><span id="insPrice"></span> ETH</span>
+                    <br /><span class="fs22"><i>fetch the flight status to get an updated list of flights!</i></span>
+                </h2>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -213,7 +216,9 @@
                         </div>
                         <select class="form-control" id="flightsPurchase"></select>
                         <div class="input-group-append">
-                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">&rightarrow;&nbsp;PURCHASE</button>
+                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="purchaseForFlight">
+                                &rightarrow;&nbsp;PURCHASE
+                            </button>
                         </div>
                         <p class="help-block text-danger"></p>
                     </div>

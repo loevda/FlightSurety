@@ -90,7 +90,8 @@ export default class Contract {
         console.log(self.airlines[0]);
         self.flightSuretyApp.methods
             .fundAirline()
-            .send({ from: this.account, value: self.web3.utils.toWei('10', 'ether'), gas:3000000}, callback);
+            .send({ from: this.account, value:
+                self.web3.utils.toWei('10', 'ether'), gas:3000000}, callback);
     }
 
     registerAirline(airline, callback) {
@@ -106,6 +107,17 @@ export default class Contract {
         self.flightSuretyApp.methods
             .registerFlight(flightNumber, timestamp, departure, destination)
             .send({ from: this.account}, callback);
+    }
+
+    buyInsurance(airline, flight, timestamp, callback) {
+        let self = this;
+        (async() => {
+            let insValue = await self.flightSuretyApp.methods.INSURANCE_COST().call();
+            self.flightSuretyApp.methods
+                .buyInsurance(airline, flight, timestamp)
+                .send({ from: this.account, value: insValue.toString(), gas:3000000}, callback);
+        })();
+
     }
 
     /*fetchFlightStatus(flight, callback) {
