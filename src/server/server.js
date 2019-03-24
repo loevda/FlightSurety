@@ -133,6 +133,7 @@ class ContractsServer  {
             })
             .on('data', (data) => {
                 console.log(data);
+                // update the list of flights
                 this.getRegisteredFlights();
             });
     }
@@ -144,7 +145,7 @@ class FlightSuretyServer {
     /**
      * Constructor that allows initialize the class
      */
-    constructor() {
+    constructor(constractsServer) {
         this.app = express();
         this.contractServer = contractsServer;
         this.initExpressMiddleWare();

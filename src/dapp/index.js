@@ -138,6 +138,15 @@ const web3 = new Web3(); // utils conversion tool needed here ....
                 console.log("Invalid data");
             }
         });
+
+        DOM.elid('updateFlightsList').addEventListener('click', () => {
+            console.log('reloading flights list');
+            getFlights();
+        });
+
+        DOM.elid('statusForFlight').addEventListener('click', () => {
+
+        });
     });
 
 })();

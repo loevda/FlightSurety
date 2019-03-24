@@ -207,7 +207,7 @@
             <div class="col-lg-12 text-center">
                 <h2 class="section-heading text-uppercase smoke">
                     PURCHASE FLIGHT DELAY INSURANCE FOR <span class="underlined"><span id="insPrice"></span> ETH</span>
-                    <br /><span class="fs22"><i>fetch the flight status to get an updated list of flights!</i></span>
+                    <br /><span class="fs22"><i>update the flights list to get the latest available flights!</i></span>
                 </h2>
                 <div class="form-group">
                     <div class="input-group">
@@ -219,8 +219,18 @@
                             <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="purchaseForFlight">
                                 &rightarrow;&nbsp;PURCHASE
                             </button>
+                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="statusForFlight">
+                                &rightarrow;&nbsp;FETCH STATUS
+                            </button>
                         </div>
-                        <p class="help-block text-danger"></p>
+                        <p class="help-block text-danger col-md-12 mt20">
+                            <span class="fs22 smoke"><i>if the list is empty check that the server is running and add flights!</i></span>
+                        </p>
+                        <p class="mt20 col-lg-12 text-center">
+                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="updateFlightsList">
+                                UPDATE FLIGHTS LIST
+                            </button>
+                        </p>
                     </div>
                 </div>
 
@@ -233,10 +243,6 @@
                     <br /><span class="fs22"><i>just keep purchasing insurance and rolling the flight status to try your luck!</i></span>
                 </h2>
                 <p>
-                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
-                        FETCH FLIGHT STATUS
-                    </button>
-                    &nbsp;&nbsp;
                     <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
                         CLAIM PREMIUM
                     </button>
