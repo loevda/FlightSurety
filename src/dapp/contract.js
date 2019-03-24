@@ -19,7 +19,6 @@ export default class Contract {
         })
     }
 
-
     initWeb3 = async (config) => {
         // Modern dapp browsers...
         if (window.ethereum) {
@@ -58,24 +57,47 @@ export default class Contract {
             .call({ from: this.account}, callback);
     }
 
+    getInsuranceCost(callback) {
+        let self = this;
+        self.flightSuretyApp.methods.INSURANCE_COST()
+            .call(callback);
+    }
+
+    pendingWithdrawals(callback) {
+        let self = this;
+        self.flightSuretyData.methods
+            .pendingWithdrawals(this.account)
+            .call(callback);
+    }
+
     isFunded(callback) {
         let self = this;
         self.flightSuretyData.methods.isAirlineFunded(self.owner)
             .call(callback);
     }
 
-    /*registerAirline(callback) {
-        let self = this;
-        self.flightSuretyApp.methods.registerAirline(self.airlines[1])
-            .call( {from: this.owner}, callback);
-    }*/
 
     fundAirline(callback) {
         let self = this;
         console.log(self.airlines[0]);
         self.flightSuretyApp.methods
             .fundAirline()
-            .send({ from: this.account, value: self.web3.utils.toWei('12', 'ether'), gas:3000000}, callback);
+            .send({ from: this.account, value: self.web3.utils.toWei('10', 'ether'), gas:3000000}, callback);
+    }
+
+    registerAirline(airline, callback) {
+        let self = this;
+        self.flightSuretyApp.methods
+            .registerAirline(airline)
+            .send({from: this.account}, callback);
+    }
+
+    registerFlight(flightNumber, departure, destination, callback) {
+        let self = this;
+        const timestamp = Math.floor(Date.now() / 1000);
+        self.flightSuretyApp.methods
+            .registerFlight(flightNumber, timestamp, departure, destination)
+            .send({ from: this.account}, callback);
     }
 
     /*fetchFlightStatus(flight, callback) {

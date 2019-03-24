@@ -20,7 +20,7 @@ contract FlightSuretyData {
         bool isFunded;
     }
     mapping(address => Airline) public airlines;
-    uint256 private numRegisteredAirlines;
+    uint256 public numRegisteredAirlines;
 
     // flights
     struct Flight {
@@ -33,6 +33,7 @@ contract FlightSuretyData {
         uint256 status_code; // if greater than 0 then it is landed
     }
     mapping (bytes32 => Flight) flights;
+    uint256 public numRegisteredFlights;
 
     // insurance
     struct InsuredData {
@@ -46,7 +47,7 @@ contract FlightSuretyData {
     mapping (bytes32 => InsuredData[]) flightInsuredPassengers;
 
     // needed for withdrawal pattern
-    mapping (address => uint) pendingWithdrawals;
+    mapping (address => uint) public pendingWithdrawals;
 
 
 
@@ -76,6 +77,7 @@ contract FlightSuretyData {
         contractOwner = msg.sender;
         airlines[_airline] = Airline(true, false);
         numRegisteredAirlines = 1;
+        numRegisteredFlights = 0;
     }
 
     /********************************************************************************************/
@@ -327,6 +329,7 @@ contract FlightSuretyData {
             _timestamp,
             0
         );
+        numRegisteredFlights = numRegisteredFlights + 1;
         emit FlightRegistered(_flightKey);
     }
 
@@ -419,7 +422,7 @@ contract FlightSuretyData {
     *      resulting in insurance payouts, the contract should be self-sustaining
     *
     */   
-    function fund ()
+    function fund()
     public
     payable
     {
@@ -443,9 +446,9 @@ contract FlightSuretyData {
     * @dev Fallback function for funding smart contract.
     *
     */
-    function() 
-                            external 
-                            payable 
+    function()
+    external
+    payable
     {
         fund();
     }

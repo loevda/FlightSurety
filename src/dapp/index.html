@@ -103,27 +103,74 @@
             <div class="col-lg-12 text-center">
                 <h2 class="section-heading text-uppercase smoke">FUND 10 ETH TO INSURANCE SCHEME</h2>
                 <p class="text-center">
-                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
-                        SEND FUND
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="fundAirline">
+                        SEND 10 ETH
                     </button>
                 </p>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-uppercase smoke mt30">REGISTER AIRLINE</h2>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">AIRLINE ADDRESS</div>
+                        </div>
+                        <input class="form-control" id="newAirline" name="newAirline" type="text" placeholder="Airline address ..">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="registerAirline">
+                        &rightarrow;&nbsp;REGISTER AIRLINE
+                    </button>
+                </div>
+
+
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2 class="section-heading text-uppercase smoke mt30">REGISTER FLIGHTS</h2>
+
                 <div class="form-group">
                     <div class="input-group">
-                        <select class="form-control"></select>
-                        <div class="input-group-append">
-                            <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">&rightarrow;&nbsp;REGISTER FLIGHT</button>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">FLIGHT #</div>
                         </div>
-
-                        <p class="help-block text-danger"></p>
+                        <input class="form-control" id="flightNumber" name="flightNumber" type="text" placeholder="Flight #">
                     </div>
-
-
                 </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">DEPARTURE</div>
+                        </div>
+                        <input class="form-control" id="departure" name="departure" type="text" placeholder="Flying from ...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">DESTINATION</div>
+                        </div>
+                        <input class="form-control" id="destination" name="destination" type="text" placeholder="Flying to ...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="registerFlight">
+                        &rightarrow;&nbsp;REGISTER FLIGHT
+                    </button>
+                </div>
+
 
             </div>
         </div>
@@ -158,15 +205,7 @@
 
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE</h2>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">AMOUNT</div>
-                        </div>
-                        <input class="form-control" id="insAmount" name="insAmount" type="number" placeholder="Max. 1 ETH, Min. 1 ETH, just like democracy, your choice ...." min="1" max="1">
-                    </div>
-                </div>
+                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE FOR <span id="insPrice"></span> ETH</h2>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -185,7 +224,7 @@
         <div class="row">
             <div class="col-lg-12 text-center mt50">
                 <h2 class="section-heading text-uppercase smoke mb40">
-                    YOU CAN CLAIM <span id="claimAmount">0 ETH</span> FOR NOW!
+                    YOU CAN CLAIM <span id="claimAmount"></span> ETH FOR NOW!
                     <br /><span class="fs22"><i>just keep purchasing insurance and rolling the flight status to try your luck!</i></span>
                 </h2>
                 <p>

@@ -17,7 +17,7 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
     // insurance cost
-    uint256 public constant MAX_INSURANCE_COST = 1 ether;
+    uint256 public constant INSURANCE_COST = 1 ether;
     uint256 private constant INSURANCE_MULTIPLIER = 150; // 150%
     // funding cost
     uint256 public constant AIRLINE_FUNDING_VALUE = 10 ether;
@@ -283,10 +283,11 @@ contract FlightSuretyApp {
     requireFlightIsRegistered(getFlightKey(_airline, _flight, _timestamp))
     requireFlightIsNotLanded(getFlightKey(_airline, _flight, _timestamp))
     requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), msg.sender)
-    checkValue(MAX_INSURANCE_COST) // extra fund will be refunded, no error
+    paidEnough(INSURANCE_COST)
+    checkValue(INSURANCE_COST) // extra fund will be refunded, no error
     {
         uint256 _amount = msg.value;
-        address(uint160(address(flightSuretyData))).transfer(msg.value);
+        address(uint160(address(flightSuretyData))).transfer(INSURANCE_COST);
         flightSuretyData.buy(getFlightKey(_airline, _flight, _timestamp),
             msg.sender, _amount, INSURANCE_MULTIPLIER);
     }
