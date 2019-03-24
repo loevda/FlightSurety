@@ -32,8 +32,8 @@ contract FlightSuretyData {
         uint timestamp;
         uint256 status_code; // if greater than 0 then it is landed
     }
-    mapping (bytes32 => Flight) flights;
-    uint256 public numRegisteredFlights;
+    mapping (bytes32 => Flight) public flights;
+    bytes32[] public registeredFlights;
 
     // insurance
     struct InsuredData {
@@ -77,7 +77,6 @@ contract FlightSuretyData {
         contractOwner = msg.sender;
         airlines[_airline] = Airline(true, false);
         numRegisteredAirlines = 1;
-        numRegisteredFlights = 0;
     }
 
     /********************************************************************************************/
@@ -152,6 +151,23 @@ contract FlightSuretyData {
     /********************************************************************************************/
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
+
+    function getFlightKeyByIndex(uint idx)
+    public
+    view
+    returns (bytes32)
+    {
+        return registeredFlights[idx];
+    }
+
+
+    function numRegisteredFlights()
+    public
+    view
+    returns (uint)
+    {
+        return registeredFlights.length;
+    }
 
     function isFlightLanded(bytes32 _flightKey)
     public
@@ -329,7 +345,7 @@ contract FlightSuretyData {
             _timestamp,
             0
         );
-        numRegisteredFlights = numRegisteredFlights + 1;
+        registeredFlights.push(_flightKey);
         emit FlightRegistered(_flightKey);
     }
 

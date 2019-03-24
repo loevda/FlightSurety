@@ -11,6 +11,8 @@ export default class Contract {
         this.flightSuretyData = new this.web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
         this.airlines = [];
         this.passengers = [];
+        this.flightsForPurchase = [];
+        this.flightsLanded = [];
         this.initialize(callback);
         let self = this;
         // listen metamask accounts change and reload account
@@ -60,6 +62,12 @@ export default class Contract {
     getInsuranceCost(callback) {
         let self = this;
         self.flightSuretyApp.methods.INSURANCE_COST()
+            .call(callback);
+    }
+
+    getFundingValue(callback) {
+        let self = this;
+        self.flightSuretyApp.methods.AIRLINE_FUNDING_VALUE()
             .call(callback);
     }
 

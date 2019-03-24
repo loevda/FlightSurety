@@ -19,6 +19,8 @@ const flightSuretyData = new web3.eth.Contract(FlightSuretyData.abi, config.data
 class ContractsServer  {
 
     constructor () {
+        this.flightsForPurchase = [];
+        this.flightsLanded = [];
     }
 
     init = async () => {
@@ -36,6 +38,7 @@ class ContractsServer  {
         }
         this.registerOracles();
         this.listenEvents();
+        this.getRegisteredFlights();
     }
 
     registerOracles = async () => {
@@ -53,6 +56,29 @@ class ContractsServer  {
                 });
             } catch (err) {
                 console.log(err.toString());
+            }
+        }
+    }
+
+    getRegisteredFlights = async () => {
+        const numRegisteredFlights =
+            await flightSuretyData.methods.numRegisteredFlights().call();
+        console.log(`${numRegisteredFlights} registered flights`);
+        // reset flights list
+        this.flightsForPurchase = [];
+        this.flightsLanded = [];
+        for (let i=0; i < parseInt(numRegisteredFlights); i++) {
+            try {
+                let flightKey = await flightSuretyData.methods.getFlightKeyByIndex(i).call();
+                let flight = await flightSuretyData.methods.flights(flightKey).call();
+                flight.flightKey = flightKey;
+                if (flight.status_code === "0") {
+                    this.flightsForPurchase.push(flight);
+                }else{
+                    this.flightsLanded.push(flight);
+                }
+            } catch(e) {
+                console.log(e);
             }
         }
     }
@@ -99,6 +125,15 @@ class ContractsServer  {
             .on('data', (data) => {
                 console.log(data);
             });
+
+        flightSuretyData.events.FlightRegistered()
+            .on('error', (error) => {
+                console.log(error);
+            })
+            .on('data', (data) => {
+                console.log(data);
+                this.getRegisteredFlights();
+            });
     }
 }
 
@@ -110,12 +145,32 @@ class FlightSuretyServer {
      */
     constructor() {
         this.app = express();
+        this.contractServer = contractsServer;
+        this.initExpressMiddleWare();
         this.getInfo();
+        this.getFlights();
         this.initControllers();
     }
 
     initControllers() {
         require("./controllers/ErrorController.js")(this.app);
+    }
+
+    initExpressMiddleWare() {
+        this.app.use(bodyParser.urlencoded({extended:true}));
+        this.app.use(bodyParser.json());
+        res.header('Access-Control-Allow-Origin', '*')
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    }
+
+    getFlights() {
+        this.app.get("/flights", (req, res) => {
+            //this.contractServer.getRegisteredFlights();
+            res.json({
+                flightsForPurchase: this.contractServer.flightsForPurchase,
+                flightsLanded: this.contractServer.flightsLanded
+            });
+        })
     }
 
 
@@ -137,7 +192,7 @@ class FlightSuretyServer {
 
 const contractsServer = new ContractsServer();
 contractsServer.init();
-const app = new FlightSuretyServer();
+const app = new FlightSuretyServer(contractsServer);
 export default app;
 
 

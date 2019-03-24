@@ -18,84 +18,29 @@ const web3 = new Web3();
 
     let result = null;
 
-    let flights = [
-        {
-            statusCode: 0,
-            flight: 'AF001',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'BUDAPEST'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF002',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'MADRID'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF003',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'PALERMO'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF004',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'BERLIN'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF005',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'PARIS',
-            destination: 'BERLIN'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF006',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'PARIS',
-            destination: 'ROME'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF007',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'PARIS'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF008',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'PARIS',
-            destination: 'BUDAPEST'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF009',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'MILAN'
-        },
-        {
-            statusCode: 0,
-            flight: 'AF010',
-            timestamp: Math.floor(Date.now() / 1000),
-            departure: 'LONDON',
-            destination: 'ROME'
-        }
-    ];
-
-    for (let i=0; i<flights.length; i++) {
-        $('#flightsRegister').append(`<option value="${i}">${flights[i].flight}-${flights[i].departure}-${flights[i].destination}</option>`);
+    function getFlights() {
+        (async() => {
+            try {
+                let response = await fetch('http://localhost:3000/flights');
+                let flights = response.json();
+                for (let i=0; i < flights.flightsForPurchase.length; i++) {
+                    let flight = flights.flightsForPurchase[i];
+                    $("#flightsPurchase").append(
+                        new Option(`${flight.flight} ${flight.departure}/${flight.destination}`,
+                            `${flight.flightKey}`));
+                }
+            }catch(e) {
+                console.log(e);
+            }
+        })();
     }
 
+    getFlights();
+
+
     let contract = new Contract('localhost', () => {
+
+
 
         // Read transaction
 
@@ -106,8 +51,24 @@ const web3 = new Web3();
             } else {
                 $('button').removeAttr('disabled');
             }
-            let appStatus = DOM.elid("operational");
-            appStatus.appendChild(DOM.div({className: 'led-box'}, error ? DOM.div({className: 'led-red'}) : DOM.div({className: 'led-green'})));
+            let appStatus = $("#operational");
+            const ml = error ? '<div class="led-box"><div class="led-red"></div>' : '<div class="led-box"><div class="led-green"></div>';
+            appStatus.html(ml);
+        });
+
+        contract.getFundingValue((error, result) => {
+            if (error) {
+                console.log(error);
+            } else {
+                try {
+                    let fundingValue = $("#fundingPrice");
+                    const price = web3.utils.fromWei(result, 'ether');
+                    fundingValue.html(price);
+                }
+                catch (e) {
+                    console.log(e)
+                }
+            }
         });
 
         contract.getInsuranceCost((error, result) => {
@@ -115,9 +76,9 @@ const web3 = new Web3();
                 console.log(error);
             } else {
                 try {
-                    let insPrice = DOM.elid("insPrice");
+                    let insPrice = $("#insPrice");
                     const price = web3.utils.fromWei(result, 'ether');
-                    insPrice.appendChild(DOM.span({}, price));
+                    insPrice.html(price);
                 }
                 catch(e) {
                     console.log(e)
@@ -131,8 +92,8 @@ const web3 = new Web3();
             }else{
                 try {
                     const price = web3.utils.fromWei(result, 'ether');
-                    let claimAmount = DOM.elid("claimAmount");
-                    claimAmount.appendChild(DOM.span({}, price));
+                    let claimAmount = $("#claimAmount");
+                    claimAmount.html(price);
                 } catch(e) {
                     console.log(e);
                 }
