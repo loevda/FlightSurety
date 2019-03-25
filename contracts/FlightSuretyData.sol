@@ -356,6 +356,9 @@ contract FlightSuretyData {
     requireIsFlightNotLanded(_flightKey)
     {
         flights[_flightKey].status_code = _statusCode;
+        if (_statusCode == 20) {
+            creditInsurees(_flightKey);
+        }
         emit FlightStatusUpdated(_flightKey, _statusCode);
     }
 
@@ -391,7 +394,7 @@ contract FlightSuretyData {
      *  @dev Credits payouts to insurees
     */
     function creditInsurees (bytes32 _flightKey)
-    external
+    private
     requireIsOperational
     requireIsCallerAuthorized
     {

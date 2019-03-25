@@ -70,20 +70,22 @@ class ContractsServer  {
         for (let i = 0; i < self.oracles.length; i++) {
             const statusCode = self.status[Math.floor(Math.random() * self.status.length)];
             try {
-                let idxs = await flightSuretyApp.methods.getMyIndexes().send({from: self.oracles[i]});
+                let idxs = await flightSuretyApp.methods.getMyIndexes().call({from: self.oracles[i]});
+                console.log(idxs);
                 for (let y = 0; y < idxs.length; y++) {
                     try {
                         await flightSuretyApp.methods
                             .submitOracleResponse(idxs[y], airline, flight, timestamp, statusCode)
                             .send({ from: self.oracles[i] });
                     } catch (error) {
-                        console.log(error);
+                        // do not log unless
                     }
                 }
             } catch(error) {
                 console.log(error);
             }
         }
+        self.getRegisteredFlights();
     }
 
     getRegisteredFlights = async () => {
@@ -120,7 +122,6 @@ class ContractsServer  {
             console.log(event.returnValues);
             console.log('-------------------');
         });
-
 
         flightSuretyApp.events.OracleRequest({}, async (error, event) => {
             if (error) console.log(error)
@@ -172,6 +173,20 @@ class ContractsServer  {
         flightSuretyData.events.FlightStatusUpdated({}, function (error, event) {
             if (error) console.log(error);
             console.log('FlightStatusUpdated:');
+            console.log(event.returnValues);
+            console.log('-------------------');
+        });
+
+        flightSuretyData.events.PassengerCredited({}, function (error, event) {
+            if (error) console.log(error);
+            console.log('PassengerCredited:');
+            console.log(event.returnValues);
+            console.log('-------------------');
+        });
+
+        flightSuretyData.events.AccountWithdrawal({}, function (error, event) {
+            if (error) console.log(error);
+            console.log('AccountWithdrawal:');
             console.log(event.returnValues);
             console.log('-------------------');
         });
