@@ -115,7 +115,7 @@ class ContractsServer  {
         let self = this;
 
         flightSuretyApp.events.OracleReport({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
             console.log('OracleReport:');
@@ -125,7 +125,7 @@ class ContractsServer  {
 
 
         flightSuretyApp.events.OracleRequest({
-            fromBlock: 0
+            //fromBlock: 0
         }, async (error, event) => {
             if (error) console.log(error)
             console.log('OracleRequest:');
@@ -137,7 +137,7 @@ class ContractsServer  {
         });
 
         flightSuretyApp.events.FlightStatusInfo({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
             console.log('FlightStatusInfo:');
@@ -146,7 +146,7 @@ class ContractsServer  {
         });
 
         flightSuretyData.events.AirlineFunded({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
             console.log('AirlineFunded:');
@@ -155,7 +155,7 @@ class ContractsServer  {
         });
 
         flightSuretyData.events.AirlineRegistered({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
             console.log('AirlineRegistered:');
@@ -164,7 +164,7 @@ class ContractsServer  {
         });
 
         flightSuretyData.events.FlightRegistered({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error);
             console.log('FlightRegistered:');
@@ -175,7 +175,7 @@ class ContractsServer  {
 
 
         flightSuretyData.events.PassengerInsured({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error);
             console.log('PassengerInsured:');
@@ -184,7 +184,7 @@ class ContractsServer  {
         });
 
         flightSuretyData.events.FlightStatusUpdated({
-            fromBlock: 0
+            //fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error);
             console.log('FlightStatusUpdated:');
