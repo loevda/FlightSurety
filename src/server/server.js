@@ -114,9 +114,7 @@ class ContractsServer  {
 
         let self = this;
 
-        flightSuretyApp.events.OracleReport({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyApp.events.OracleReport({}, function (error, event) {
             if (error) console.log(error)
             console.log('OracleReport:');
             console.log(event.returnValues);
@@ -124,9 +122,7 @@ class ContractsServer  {
         });
 
 
-        flightSuretyApp.events.OracleRequest({
-            //fromBlock: 0
-        }, async (error, event) => {
+        flightSuretyApp.events.OracleRequest({}, async (error, event) => {
             if (error) console.log(error)
             console.log('OracleRequest:');
             console.log(event.returnValues);
@@ -136,36 +132,28 @@ class ContractsServer  {
             await self.submitOracleResponse(airline, flight, timestamp);
         });
 
-        flightSuretyApp.events.FlightStatusInfo({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyApp.events.FlightStatusInfo({}, function (error, event) {
             if (error) console.log(error)
             console.log('FlightStatusInfo:');
             console.log(event.returnValues);
             console.log('-------------------');
         });
 
-        flightSuretyData.events.AirlineFunded({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyData.events.AirlineFunded({}, function (error, event) {
             if (error) console.log(error)
             console.log('AirlineFunded:');
             console.log(event.returnValues);
             console.log('-------------------');
         });
 
-        flightSuretyData.events.AirlineRegistered({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyData.events.AirlineRegistered({}, function (error, event) {
             if (error) console.log(error)
             console.log('AirlineRegistered:');
             console.log(event.returnValues);
             console.log('-------------------');
         });
 
-        flightSuretyData.events.FlightRegistered({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyData.events.FlightRegistered({}, function (error, event) {
             if (error) console.log(error);
             console.log('FlightRegistered:');
             console.log(event.returnValues);
@@ -174,18 +162,14 @@ class ContractsServer  {
         });
 
 
-        flightSuretyData.events.PassengerInsured({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyData.events.PassengerInsured({}, function (error, event) {
             if (error) console.log(error);
             console.log('PassengerInsured:');
             console.log(event.returnValues);
             console.log('-------------------');
         });
 
-        flightSuretyData.events.FlightStatusUpdated({
-            //fromBlock: 0
-        }, function (error, event) {
+        flightSuretyData.events.FlightStatusUpdated({}, function (error, event) {
             if (error) console.log(error);
             console.log('FlightStatusUpdated:');
             console.log(event.returnValues);
