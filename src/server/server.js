@@ -70,11 +70,7 @@ class ContractsServer  {
         for (let i = 0; i < self.oracles.length; i++) {
             const statusCode = self.status[Math.floor(Math.random() * self.status.length)];
             try {
-                idxs = await flightSuretyApp.methods.getMyIndexes().send({from: self.oracles[i]});
-            } catch(error) {
-                console.log(error);
-            }
-            if (idxs) {
+                let idxs = await flightSuretyApp.methods.getMyIndexes().send({from: self.oracles[i]});
                 for (let y = 0; y < idxs.length; y++) {
                     try {
                         await flightSuretyApp.methods
@@ -84,26 +80,29 @@ class ContractsServer  {
                         console.log(error);
                     }
                 }
+            } catch(error) {
+                console.log(error);
             }
         }
     }
 
     getRegisteredFlights = async () => {
+        let self = this;
         const numRegisteredFlights =
             await flightSuretyData.methods.numRegisteredFlights().call();
         console.log(`${numRegisteredFlights} registered flights`);
         // reset flights list
-        this.flightsForPurchase = [];
-        this.flightsLanded = [];
+        self.flightsForPurchase = [];
+        self.flightsLanded = [];
         for (let i=0; i < parseInt(numRegisteredFlights); i++) {
             try {
                 let flightKey = await flightSuretyData.methods.getFlightKeyByIndex(i).call();
                 let flight = await flightSuretyData.methods.flights(flightKey).call();
                 flight.flightKey = flightKey;
                 if (flight.status_code === "0") {
-                    this.flightsForPurchase.push(flight);
+                    self.flightsForPurchase.push(flight);
                 }else{
-                    this.flightsLanded.push(flight);
+                    self.flightsLanded.push(flight);
                 }
             } catch(e) {
                 console.log(e);
@@ -119,7 +118,9 @@ class ContractsServer  {
             fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
-            console.log(`OracleReport: ${event}`);
+            console.log('OracleReport:');
+            console.log(event.returnValues);
+            console.log('-------------------');
         });
 
 
@@ -127,7 +128,9 @@ class ContractsServer  {
             fromBlock: 0
         }, async (error, event) => {
             if (error) console.log(error)
-            console.log(`OracleRequest: ${event}`);
+            console.log('OracleRequest:');
+            console.log(event.returnValues);
+            console.log('-------------------');
             // get the data
             const {airline, flight, timestamp} = event.returnValues;
             await self.submitOracleResponse(airline, flight, timestamp);
@@ -137,29 +140,56 @@ class ContractsServer  {
             fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
-            console.log(`FlightStatusInfo: ${event}`);
+            console.log('FlightStatusInfo:');
+            console.log(event.returnValues);
+            console.log('-------------------');
         });
 
         flightSuretyData.events.AirlineFunded({
             fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
-            console.log(`AirlineFunded: ${event}`);
+            console.log('AirlineFunded:');
+            console.log(event.returnValues);
+            console.log('-------------------');
         });
 
         flightSuretyData.events.AirlineRegistered({
             fromBlock: 0
         }, function (error, event) {
             if (error) console.log(error)
-            console.log(`AirlineRegistered: ${event}`);
+            console.log('AirlineRegistered:');
+            console.log(event.returnValues);
+            console.log('-------------------');
         });
 
         flightSuretyData.events.FlightRegistered({
             fromBlock: 0
         }, function (error, event) {
-            if (error) console.log(error)
-            console.log(`FlightRegistered: ${event}`);
-            this.getRegisteredFlights();
+            if (error) console.log(error);
+            console.log('FlightRegistered:');
+            console.log(event.returnValues);
+            console.log('-------------------');
+            self.getRegisteredFlights();
+        });
+
+
+        flightSuretyData.events.PassengerInsured({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error);
+            console.log('PassengerInsured:');
+            console.log(event.returnValues);
+            console.log('-------------------');
+        });
+
+        flightSuretyData.events.FlightStatusUpdated({
+            fromBlock: 0
+        }, function (error, event) {
+            if (error) console.log(error);
+            console.log('FlightStatusUpdated:');
+            console.log(event.returnValues);
+            console.log('-------------------');
         });
     }
 }

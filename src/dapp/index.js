@@ -23,7 +23,7 @@ const web3 = new Web3(); // utils conversion tool needed here ....
             try {
                 let response = await fetch('http://localhost:3000/flights');
                 let flights = await response.json();
-                $("#flightsPurchase").val(null);
+                $("#flightsPurchase").find('option').remove()
                 for (let i=0; i < flights.flightsForPurchase.length; i++) {
                     let flight = flights.flightsForPurchase[i];
                     $("#flightsPurchase").append(
