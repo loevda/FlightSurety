@@ -16,28 +16,24 @@ To install, download or clone the repo, then:
     __Warning__: Network Port has been updated to 7545 for Ganache AppImage
 4. `npm run server` <br />
     __Warning__: Start the server first because the data contract auhtorization call is made from the server
-5. npm run dapp
+5. `npm run dapp` <br />
+    The DApp is runing at `http://localhost:8000`
 
-## Develop Client
+## Testing
 
 To run truffle tests:
+1. Update the mnemonic in truffle.js with key seed.
+2. `truffle dev`
+3. `migrate --reset`
+4. `test`
 
-`truffle test ./test/flightSurety.js`
-`truffle test ./test/oracles.js`
+Feature of the tests:
+1. Check the operational status of the contracts;
+2. Funding or ailine;
+3. Register airlines with the multiparty threshold;
+4. Flight registration by airline;
+5. Passenger purchase of insurance;
 
-To use the dapp:
-
-`truffle migrate`
-`npm run dapp`
-
-To view dapp:
-
-`http://localhost:8000`
-
-## Develop Server
-
-`npm run server`
-`truffle test ./test/oracles.js`
 
 ## Deploy
 
