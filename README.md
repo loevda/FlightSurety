@@ -8,7 +8,7 @@ This repository contains Smart Contract code in Solidity (using Truffle), tests 
 __Notes:__ The project has been tested with __Truffle v5.0.4__, __Solidity 0.5.6__ and __node v10.15.1__<br />
 __
 
-To install, download or clone the repo, then:
+##### To install, download or clone the repo, then:
 
 1. `npm install`
 2. `truffle compile`
