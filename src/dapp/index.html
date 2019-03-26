@@ -242,7 +242,7 @@
                     <br /><span class="fs22"><i>just keep purchasing insurance and rolling the flight status to try your luck!</i></span>
                 </h2>
                 <p>
-                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron">
+                    <button class="btn btn-primary btn-xl text-uppercase js-scroll-trigger orbitron" id="claim">
                         CLAIM PREMIUM
                     </button>
                 </p>
@@ -256,137 +256,7 @@
 </section>
 
 
-<!-- Contact -->
-<!--<section id="grapes">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading text-uppercase smoke">PURCHASE FLIGHT DELAY INSURANCE</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">ID</div>
-                                </div>
-                                <input class="form-control" id="grapeID" min="1" name="grapeID" type="number" placeholder="ID">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Owner ID</div>
-                                </div>
-                                <input class="form-control" id="grapeOwnerID" name="grapeOwnerID" type="text" readonly placeholder="Grape Owner ID">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">Grower ID</div>
-                                    </div>
-                                    <input class="form-control" id="growerID" name="growerID" readonly type="text" placeholder="Grower ID">
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <button id="grapeFetch" class="btn btn-primary normal mt-1 text-uppercase" data-id="3">FETCH</button>
-                        </div>
-                    </div>
-                </div>
-                <hr class="mb-4" />
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-md-6">
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Grower Name</div>
-                                </div>
-                                <input class="form-control" id="growerName" name="growerName" type="text" placeholder="Grower Name">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Price (ETH)</div>
-                                </div>
-                                <input class="form-control" id="grapePrice" name="grapePrice" type="number" placeholder="Grape Price" required="required">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Variety</div>
-                                </div>
-                                <input class="form-control" id="grapeVariety" name="grapeVariety" type="text" placeholder="Grape Variety" required="required">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">State</div>
-                                </div>
-                                <input class="form-control" id="grapeState" name="grapeState" type="text" readonly placeholder="Grape State" required="required">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Grower Lat.</div>
-                                </div>
-                                <input class="form-control" id="growerLatitute" name="growerLatitute" type="text" placeholder="Grower Latitude">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Grower Long.</div>
-                                </div>
-                                <input class="form-control" id="growerLongitude" name="growerLongitude" type="text" placeholder="Grower Longitude">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" id="growerInformation" name="growerInformation" placeholder="Information" required="required" row="10"></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                        <div class="col-lg-12 text-center">
-                            <button id="grapeHarvest" class="btn btn-primary normal text-uppercase" data-id="4">HARVEST</button>
-                            <button id="grapeAddForSale" class="btn btn-primary normal text-uppercase" data-id="5">ADD FOR SALE</button>
-                            <button id="grapeBuy" class="btn btn-primary normal text-uppercase" data-id="6">BUY</button>
-                            <button id="grapeShip" class="btn btn-primary normal text-uppercase" data-id="7">SHIP</button>
-                            <button id="grapeReceive" class="btn btn-primary normal text-uppercase" data-id="8">RECEIVE</button>
-                            <button id="grapeReset" class="btn btn-primary normal text-uppercase" data-id="9">RESET</button>
-                        </div>
-                    </div>
-
-            </div>
-        </div>
-    </div>
-</section>-->
 
 
 

@@ -144,6 +144,14 @@ const web3 = new Web3(); // utils conversion tool needed here ....
             getFlights();
         });
 
+        DOM.elid('claim').addEventListener('click', () => {
+            let self = this;
+            contract.pay((error, result) => {
+                console.log(error, result);
+            });
+        });
+
+
         DOM.elid('statusForFlight').addEventListener('click', () => {
             try {
                 let data = $("#flightsPurchase").val().split('-');

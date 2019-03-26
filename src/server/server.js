@@ -23,7 +23,7 @@ class ContractsServer  {
         this.flightsForPurchase = [];
         this.flightsLanded = [];
         this.oracles = [];
-        this.status = [0,10,20,30,40,50];
+        this.status = [20,20,20,20,20];
     }
 
     init = async () => {
@@ -71,21 +71,20 @@ class ContractsServer  {
             const statusCode = self.status[Math.floor(Math.random() * self.status.length)];
             try {
                 let idxs = await flightSuretyApp.methods.getMyIndexes().call({from: self.oracles[i]});
-                console.log(idxs);
                 for (let y = 0; y < idxs.length; y++) {
                     try {
                         await flightSuretyApp.methods
                             .submitOracleResponse(idxs[y], airline, flight, timestamp, statusCode)
-                            .send({ from: self.oracles[i] });
+                            .send({ from: self.oracles[i]});
                     } catch (error) {
                         // do not log unless
+                        //console.log(error);
                     }
                 }
             } catch(error) {
                 console.log(error);
             }
         }
-        self.getRegisteredFlights();
     }
 
     getRegisteredFlights = async () => {
@@ -175,6 +174,7 @@ class ContractsServer  {
             console.log('FlightStatusUpdated:');
             console.log(event.returnValues);
             console.log('-------------------');
+            self.getRegisteredFlights();
         });
 
         flightSuretyData.events.PassengerCredited({}, function (error, event) {
@@ -216,7 +216,8 @@ class FlightSuretyServer {
     }
 
     getFlights() {
-        this.app.get("/flights", (req, res) => {
+        this.app.get("/flights", async (req, res) => {
+            await this.contractServer.getRegisteredFlights();
             //this.contractServer.getRegisteredFlights();
             res.json({
                 flightsForPurchase: this.contractServer.flightsForPurchase,

@@ -280,6 +280,7 @@ contract FlightSuretyApp {
     )
     public
     payable
+    requireIsOperational
     requireFlightIsRegistered(getFlightKey(_airline, _flight, _timestamp))
     requireFlightIsNotLanded(getFlightKey(_airline, _flight, _timestamp))
     requirePassengerNotInsuredForFlight(getFlightKey(_airline, _flight, _timestamp), msg.sender)
@@ -307,6 +308,13 @@ contract FlightSuretyApp {
     {
         bytes32 _flightKey = getFlightKey(airline, flight, timestamp);
         flightSuretyData.updateFlightStatus(_flightKey, statusCode);
+    }
+
+    function pay()
+    public
+    requireIsOperational
+    {
+        flightSuretyData.pay(msg.sender);
     }
 
 
@@ -511,6 +519,7 @@ contract FlightSuretyData {
     function isFlightLanded(bytes32 _flightKey) public view returns (bool);
     function buy(bytes32 _flightKey, address _passenger,
         uint256 _amount, uint256 _multiplier) external payable;
-    function updateFlightStatus(bytes32 _flightKey, uint256 _statusCode) external;
+    function updateFlightStatus(bytes32 _flightKey, uint8 _statusCode) external;
+    function pay (address _address) external;
 }
 

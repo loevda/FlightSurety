@@ -30,7 +30,7 @@ contract FlightSuretyData {
         string departure;
         string destination;
         uint timestamp;
-        uint256 status_code; // if greater than 0 then it is landed
+        uint8 status_code; // if greater than 0 then it is landed
     }
     mapping (bytes32 => Flight) public flights;
     bytes32[] public registeredFlights;
@@ -60,7 +60,7 @@ contract FlightSuretyData {
     event AirlineFunded(address _airline);
     event FlightRegistered(bytes32 _flightKey);
     event PassengerInsured(bytes32 _flightKey, address _passenger);
-    event FlightStatusUpdated(bytes32 _flightKey, uint256 _statusCode);
+    event FlightStatusUpdated(bytes32 _flightKey, uint8 _statusCode);
     event PassengerCredited(address _passenger);
     event AccountWithdrawal(address _address, uint256 _amount);
 
@@ -349,14 +349,14 @@ contract FlightSuretyData {
         emit FlightRegistered(_flightKey);
     }
 
-    function updateFlightStatus(bytes32 _flightKey, uint256 _statusCode)
+    function updateFlightStatus(bytes32 _flightKey, uint8 _statusCode)
     external
     requireIsOperational
     requireIsCallerAuthorized
     requireIsFlightNotLanded(_flightKey)
     {
         flights[_flightKey].status_code = _statusCode;
-        if (_statusCode == 20) {
+        if (flights[_flightKey].status_code == 20) {
             creditInsurees(_flightKey);
         }
         emit FlightStatusUpdated(_flightKey, _statusCode);
@@ -394,27 +394,27 @@ contract FlightSuretyData {
      *  @dev Credits payouts to insurees
     */
     function creditInsurees (bytes32 _flightKey)
-    private
+    internal
     requireIsOperational
     requireIsCallerAuthorized
     {
-        //
         for (uint i = 0; i < flightInsuredPassengers[_flightKey].length; i++) {
             if (flightInsuredPassengers[_flightKey][i].credited == false) {
                 // credited to true
                 flightInsuredPassengers[_flightKey][i].credited = true;
-                uint amount = calcPremium(flightInsuredPassengers[_flightKey][i].amount,
+                uint256 amount = calcPremium(flightInsuredPassengers[_flightKey][i].amount,
                     flightInsuredPassengers[_flightKey][i].multiplier);
                 pendingWithdrawals[flightInsuredPassengers[_flightKey][i].passenger] += amount;
                 emit PassengerCredited(flightInsuredPassengers[_flightKey][i].passenger);
             }
+
         }
     }
 
-    function calcPremium(uint _amount, uint _multiplier)
+    function calcPremium(uint256 _amount, uint256 _multiplier)
     private
     pure
-    returns (uint)
+    returns (uint256)
     {
         return _amount.mul(_multiplier).div(100);
     }

@@ -125,7 +125,13 @@ export default class Contract {
         self.flightSuretyApp.methods
             .fetchFlightStatus(airline, flight, timestamp)
             .send({ from: this.account}, (error, result) => {
-                callback(error, payload);
+                callback(error, result);
             });
+    }
+
+    pay(callback) {
+        let self = this;
+        self.flightSuretyApp.methods
+            .pay().send({ from: this.account}, callback);
     }
 }
