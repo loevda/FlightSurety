@@ -314,7 +314,7 @@ contract FlightSuretyApp {
     public
     requireIsOperational
     {
-        flightSuretyData.pay(msg.sender);
+        flightSuretyData.pay(address(uint160(address(msg.sender))));
     }
 
 

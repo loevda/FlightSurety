@@ -132,6 +132,13 @@ export default class Contract {
     pay(callback) {
         let self = this;
         self.flightSuretyApp.methods
-            .pay().send({ from: this.account}, callback);
+            .pay().send({ from: this.account, gas:3000000}, callback);
+    }
+
+    balance(callback) {
+        let self = this;
+        console.log(web3.eth.getBalance(self.flightSuretyData._address));
+        callback;
+        //elf.flightSuretyData.balance.call(callback);
     }
 }

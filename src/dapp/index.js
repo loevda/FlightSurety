@@ -151,6 +151,12 @@ const web3 = new Web3(); // utils conversion tool needed here ....
             });
         });
 
+        DOM.elid('balance').addEventListener('click', () => {
+            contract.balance((error, result) => {
+                lert(result, error);
+            })
+        })
+
 
         DOM.elid('statusForFlight').addEventListener('click', () => {
             try {

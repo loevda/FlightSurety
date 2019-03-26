@@ -61,7 +61,7 @@ contract FlightSuretyData {
     event FlightRegistered(bytes32 _flightKey);
     event PassengerInsured(bytes32 _flightKey, address _passenger);
     event FlightStatusUpdated(bytes32 _flightKey, uint8 _statusCode);
-    event PassengerCredited(address _passenger);
+    event PassengerCredited(address _passenger, uint256 _amount);
     event AccountWithdrawal(address _address, uint256 _amount);
 
 
@@ -353,11 +353,13 @@ contract FlightSuretyData {
     external
     requireIsOperational
     requireIsCallerAuthorized
-    requireIsFlightNotLanded(_flightKey)
     {
-        flights[_flightKey].status_code = _statusCode;
-        if (flights[_flightKey].status_code == 20) {
-            creditInsurees(_flightKey);
+        // check if the flight has landed gracefully without reverting
+        if (flights[_flightKey].status_code == 0) {
+            flights[_flightKey].status_code = _statusCode;
+            if (_statusCode == 20) {
+                creditInsurees(_flightKey);
+            }
         }
         emit FlightStatusUpdated(_flightKey, _statusCode);
     }
@@ -404,10 +406,9 @@ contract FlightSuretyData {
                 flightInsuredPassengers[_flightKey][i].credited = true;
                 uint256 amount = calcPremium(flightInsuredPassengers[_flightKey][i].amount,
                     flightInsuredPassengers[_flightKey][i].multiplier);
-                pendingWithdrawals[flightInsuredPassengers[_flightKey][i].passenger] += amount;
-                emit PassengerCredited(flightInsuredPassengers[_flightKey][i].passenger);
+                pendingWithdrawals[flightInsuredPassengers[_flightKey][i].passenger] = amount;
+                emit PassengerCredited(flightInsuredPassengers[_flightKey][i].passenger, amount);
             }
-
         }
     }
 
