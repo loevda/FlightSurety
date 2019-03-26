@@ -91,12 +91,18 @@ section#flights {
     padding-top: 14px;
     overflow: auto!important;
     z-index: 60000;
-    display: none;
 }
 
 #ftc-events {
     font-family: "Courier New";
     list-style: none;
+    margin: auto;
+    text-align: center;
+}
+
+#ftc-events li {
+    padding: 0px;
+    text-transform: uppercase;
 }
 
 

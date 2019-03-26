@@ -73,9 +73,9 @@ export default class Contract {
 
     pendingWithdrawals(callback) {
         let self = this;
-        self.flightSuretyData.methods
-            .pendingWithdrawals(this.account)
-            .call(callback);
+            self.flightSuretyData.methods
+                .pendingWithdrawals(this.account)
+                .call(callback);
     }
 
     isFunded(callback) {

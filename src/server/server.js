@@ -75,7 +75,7 @@ class ContractsServer  {
                     try {
                         await flightSuretyApp.methods
                             .submitOracleResponse(idxs[y], airline, flight, timestamp, statusCode)
-                            .send({ from: self.oracles[i], gas:3000000});
+                            .send({ from: self.oracles[i], gas:3000000}); // error with no gas
                     } catch (error) {
                         // do not log unless
                         console.log(error.toString());

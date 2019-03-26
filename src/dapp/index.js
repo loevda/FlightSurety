@@ -30,6 +30,10 @@ const web3 = new Web3(); // utils conversion tool needed here ....
                         new Option(`${flight.flight} ${flight.departure}/${flight.destination}`,
                             `${flight.airline}-${flight.flight}-${flight.timestamp}`));
                 }
+                for (let i=0; i < flights.flightsLanded.length; i++) {
+                    let flight = flights.flightsLanded[i];
+                    $("#ftc-events").prepend(`<li class="m-auto">${flight.flight} ${flight.departure}/${flight.destination} ${flight.status_code}</li>`);
+                }
             }catch(e) {
                 console.log(e);
             }
@@ -81,19 +85,26 @@ const web3 = new Web3(); // utils conversion tool needed here ....
             }
         });
 
-        contract.pendingWithdrawals((error, result) => {
-            if (error) {
-                console.log(error);
-            }else{
-                try {
-                    const price = web3.utils.fromWei(result, 'ether');
-                    let claimAmount = $("#claimAmount");
-                    claimAmount.html(price);
-                } catch(e) {
-                    console.log(e);
+        function getBalance() {
+            contract.pendingWithdrawals((error, result) => {
+                let price = 0;
+                if (error) {
+                    console.log(error);
+                }else{
+                    try {
+                        price = web3.utils.fromWei(result, 'ether');
+                    } catch(e) {
+                        console.log(e);
+                    }
                 }
-            }
-        });
+                let claimAmount = $("#claimAmount");
+                claimAmount.html(price);
+            });
+        }
+
+        getBalance();
+
+
 
         DOM.elid('registerAirline').addEventListener('click', () => {
             const airline = $("#newAirline").val();
@@ -148,13 +159,12 @@ const web3 = new Web3(); // utils conversion tool needed here ....
             let self = this;
             contract.pay((error, result) => {
                 console.log(error, result);
+                getBalance();
             });
         });
 
         DOM.elid('balance').addEventListener('click', () => {
-            contract.balance((error, result) => {
-                lert(result, error);
-            })
+            getBalance();
         })
 
 
