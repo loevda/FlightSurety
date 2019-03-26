@@ -23,17 +23,19 @@ const web3 = new Web3(); // utils conversion tool needed here ....
             try {
                 let response = await fetch('http://localhost:3000/flights');
                 let flights = await response.json();
-                $("#flightsPurchase").find('option').remove()
+                $("#flightsPurchase").find('option').remove();
                 for (let i=0; i < flights.flightsForPurchase.length; i++) {
                     let flight = flights.flightsForPurchase[i];
                     $("#flightsPurchase").append(
                         new Option(`${flight.flight} ${flight.departure}/${flight.destination}`,
                             `${flight.airline}-${flight.flight}-${flight.timestamp}`));
                 }
+                $("#ftc-events").find('li').remove();
                 for (let i=0; i < flights.flightsLanded.length; i++) {
                     let flight = flights.flightsLanded[i];
                     $("#ftc-events").prepend(`<li class="m-auto">${flight.flight} ${flight.departure}/${flight.destination} ${flight.status_code}</li>`);
                 }
+                $("#ftc-events").prepend('<li><h6 class="text-center">LANDED FLIGHTS</h6></li>');
             }catch(e) {
                 console.log(e);
             }

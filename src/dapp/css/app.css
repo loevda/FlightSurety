@@ -96,13 +96,15 @@ section#flights {
 #ftc-events {
     font-family: "Courier New";
     list-style: none;
-    margin: auto;
+    width: 100%;
     text-align: center;
+    margin: 0px;
 }
 
 #ftc-events li {
-    padding: 0px;
+    padding: 0px!important;
     text-transform: uppercase;
+    width: 100%;
 }
 
 
@@ -239,7 +241,8 @@ section#flights {
 
 
 footer {
-    background: #000000;
+    background: #3c3c3c;
+    margin-bottom: 100px;
 }
 
 ul.social-buttons li a {
