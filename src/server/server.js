@@ -23,7 +23,9 @@ class ContractsServer  {
         this.flightsForPurchase = [];
         this.flightsLanded = [];
         this.oracles = [];
-        this.status = [20,20,20,20,20];
+        // add 20 for every entry if you want to test it
+        // and do not have the willing to wait your luck
+        this.status = [20,30,40,50,0];
     }
 
     init = async () => {
