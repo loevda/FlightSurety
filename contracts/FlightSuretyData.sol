@@ -406,7 +406,7 @@ contract FlightSuretyData {
                 flightInsuredPassengers[_flightKey][i].credited = true;
                 uint256 amount = calcPremium(flightInsuredPassengers[_flightKey][i].amount,
                     flightInsuredPassengers[_flightKey][i].multiplier);
-                pendingWithdrawals[flightInsuredPassengers[_flightKey][i].passenger] = amount;
+                pendingWithdrawals[flightInsuredPassengers[_flightKey][i].passenger] += amount;
                 emit PassengerCredited(flightInsuredPassengers[_flightKey][i].passenger, amount);
             }
         }
