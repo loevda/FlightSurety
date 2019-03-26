@@ -5,14 +5,14 @@
 
 This repository contains Smart Contract code in Solidity (using Truffle), tests (also using Truffle), dApp scaffolding (using HTML, CSS and JS) and server app scaffolding.<br />
 <br />
-__Notes:__ The project has been tested with __Truffle v5.0.4__, __Solidity 0.5.0__ and __npm v10.15.1__<br />
+__Notes:__ The project has been tested with __Truffle v5.0.4__, __Solidity 0.5.6__ and __node v10.15.1__<br />
 __
 
 To install, download or clone the repo, then:
 
 1. `npm install`
 2. `truffle compile`
-3. `truffle migrate --reset --network ganache --firstAirline=FIRST_AIRLINE_ADDRESS`<br />
+3. `truffle migrate --reset --network ganache --firstAirline=FIRST_AIRLINE_ADDRESS --numOracles=NUM_OF_ORACLES`<br />
     __Warning__: Network Port has been updated to 7545 for Ganache AppImage
 4. npm run server
 5. npm run dapp
