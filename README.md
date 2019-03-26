@@ -21,18 +21,20 @@ To install, download or clone the repo, then:
 
 ## Testing
 
-To run truffle tests:
-1. Update the mnemonic in truffle.js with key seed.
+#####To run truffle tests:
+1. Update the mnemonic in truffle.js with your key seed.
 2. `truffle dev`
 3. `migrate --reset`
 4. `test`
 
-Feature of the tests:
+#####Feature of the tests:
 1. Check the operational status of the contracts;
 2. Funding or ailine;
 3. Register airlines with the multiparty threshold;
 4. Flight registration by airline;
 5. Passenger purchase of insurance;
+6. Check Oracles registration;
+7. Watch for FlightStusInfo event;
 
 
 ## Deploy
