@@ -45,6 +45,19 @@ To build dapp for prod:
 Deploy the contents of the ./dapp folder
 
 
+## Using the DApp
+
+Using the DApp is straightforward. Start Metamask, clear the history and use the address of the first ailine. <br />
+##### You can then: 
+1. send fund; 
+2. register flights, 
+3. update the flights lists
+4. purchase insurance for a spcific flight, 
+5. update the flight status of a specific flight,
+6. check your balance
+7. claim your insurance payout
+
+
 ## Credits
 
 ##### Theme
